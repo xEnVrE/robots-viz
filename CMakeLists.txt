@@ -88,9 +88,3 @@ install_basic_package_files(${PROJECT_NAME}
 
 # Add the uninstall target
 include(AddUninstallTarget)
-
-
-### Add integration tests (unit tests for each library should be in each sublibrary directory)
-if(BUILD_TESTING)
-  add_subdirectory(test)
-endif()
