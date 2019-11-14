@@ -3,6 +3,9 @@
 
 Small C++ library for representing meshes and point clouds in a VTK viewer.
 
+
+<img width="320" height="320" src="misc/example_0.png">  <img width="320" height="320" src="misc/example_1.png">
+
 ### Dependencies
 
 - [`Eigen 3`](http://eigen.tuxfamily.org/index.php?title=Main_Page)
