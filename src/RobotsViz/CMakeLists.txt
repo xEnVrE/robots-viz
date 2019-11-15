@@ -7,8 +7,6 @@
 #
 #===============================================================================
 
-option(USE_YARP "Use YARP" OFF)
-
 set(LIBRARY_TARGET_NAME RobotsViz)
 
 include(CMakeRC)
