@@ -68,7 +68,7 @@ add_subdirectory(src)
 # Install the files necessary to call find_package(LibTemplateCMake) in CMake projects
 
 # It seems that we need to force dependencies here for YARP and ICUB
-set(DEPENDENCIES "VTK")
+set(DEPENDENCIES "Eigen3" "VTK")
 if (USE_YARP)
   set(DEPENDENCIES ${DEPENDENCIES} "YARP COMPONENTS eigen os sig")
 endif()
