@@ -70,7 +70,7 @@ add_subdirectory(src)
 # It seems that we need to force dependencies here for YARP and ICUB
 set(DEPENDENCIES "VTK")
 if (USE_YARP)
-  set(DEPENDENCIES ${DEPENDENCIES} "YARP" "YARP COMPONENTS eigen")
+  set(DEPENDENCIES ${DEPENDENCIES} "YARP COMPONENTS eigen os sig")
 endif()
 if (USE_SUPERIMPOSE)
   set(DEPENDENCIES ${DEPENDENCIES} "SuperimposeMesh")
