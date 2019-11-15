@@ -86,7 +86,8 @@ install_basic_package_files(${PROJECT_NAME}
                             VARS_PREFIX ${PROJECT_NAME}
                             NO_CHECK_REQUIRED_COMPONENTS_MACRO
                             UPPERCASE_FILENAMES
-                            DEPENDENCIES ${DEPENDENCIES})
+                            DEPENDENCIES ${DEPENDENCIES}
+                            INCLUDE_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ForceVTKUseFile.cmake)
 
 # Add the uninstall target
 include(AddUninstallTarget)
