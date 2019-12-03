@@ -41,6 +41,7 @@ SIiCubHand::SIiCubHand(const std::string& robot_name, const std::string& lateral
         throw(std::runtime_error(log_name_ + "::ctor. Cannot open hand pose input port."));
 
     /* Load meshes. */
+    std::istringstream top_cover_model_stream(MeshResources("full_" +  laterality_key + "TopCover.obj").get_data());
     std::istringstream palm_model_stream(MeshResources("full_" +  laterality_key + "HandPalm_red.obj").get_data());
 
     std::istringstream thumb0_model_stream(MeshResources("full_" +  laterality_key + "Thumb0.obj").get_data());
@@ -68,6 +69,7 @@ SIiCubHand::SIiCubHand(const std::string& robot_name, const std::string& lateral
     std::istringstream little2_model_stream(MeshResources("full_" +  laterality_key + "LittleFinger2.obj").get_data());
     std::istringstream little3_model_stream(MeshResources("full_" +  laterality_key + "LittleFingerTip_b.obj").get_data());
 
+    meshes_["top_cover"] = &top_cover_model_stream;
     meshes_["palm"] = &palm_model_stream;
 
     meshes_["thumb0"] = &thumb0_model_stream;

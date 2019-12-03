@@ -112,6 +112,7 @@ cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_RCShader
                           meshes/full_LeftLittleFinger1.obj
                           meshes/full_LeftLittleFinger2.obj
                           meshes/full_LeftLittleFingerTip_b.obj
+                          meshes/full_LeftTopCover.obj
 )
 
 # Create library

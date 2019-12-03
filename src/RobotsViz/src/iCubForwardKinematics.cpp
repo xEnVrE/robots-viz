@@ -17,6 +17,10 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
 {
     if (part_name == "left_hand")
     {
+    /* Map from end-effector to top cover. */
+        maps_["ee"]["top_cover"] = T::Identity();
+
+
     /* Map from end-effector to palm. */
 
         /* Virtual root to end-effector. */
