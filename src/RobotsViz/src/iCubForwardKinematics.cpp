@@ -278,7 +278,9 @@ T iCubForwardKinematics::map(const std::string& from, const std::string& to, con
     T map;
 
     if (from == "ee" && to == "palm")
-        map =  maps_.at("ee").at("palm");
+        map = maps_.at("ee").at("palm");
+    else if (from == "ee" && to == "top_cover")
+        map = maps_.at("ee").at("top_cover");
     else if (from == "ee")
     {
         if (to.find("thumb") != to.npos)
