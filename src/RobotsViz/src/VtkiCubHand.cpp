@@ -39,7 +39,10 @@ VtkiCubHand::VtkiCubHand(const std::string& robot_name, const std::string& later
         throw(std::runtime_error(log_name_ + "::ctor. Cannot open hand pose input port."));
 
     /* Add meshes of hand parts. */
-    meshes_.emplace("top_cover", VtkMeshOBJ("full_" +  laterality_key + "TopCover.obj", true, color, opacity));
+    if (laterality == "left")
+        meshes_.emplace("top_cover", VtkMeshOBJ("full_" +  laterality_key + "TopCover.obj", true, color, opacity));
+    /* else
+       Mesh still not available */
     meshes_.emplace("palm", VtkMeshOBJ("full_" +  laterality_key + "HandPalm.obj", true, color, opacity));
 
     meshes_.emplace("thumb0", VtkMeshOBJ("full_" + laterality_key + "Thumb0.obj", true, color, opacity));
