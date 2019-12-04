@@ -6,16 +6,17 @@
  */
 
 #include <RobotsViz/iCubForwardKinematics.h>
+#include <cmath>
 
 using namespace Eigen;
 using namespace RobotsViz;
 using Tr = Translation<double, 3>;
 using R = AngleAxisd;
 
-
+#include <iostream>
 iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
 {
-    if (part_name == "left_hand")
+    if ((part_name == "left_hand") || (part_name == "right_hand"))
     {
     /* Map from end-effector to top cover. */
         maps_["ee"]["top_cover"] = T::Identity();
@@ -24,13 +25,21 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
     /* Map from end-effector to palm. */
 
         /* Virtual root to end-effector. */
-        T vr_ee = DH(0.016, 0.0, 0.0625, M_PI);
+        T vr_ee;
+        if (part_name == "left_hand")
+            vr_ee = DH(0.016, 0.0, 0.0625, M_PI);
+        else
+            vr_ee = DH(0.016, 0.0, 0.0625, 0.0);
 
         /* Virtual root to palm. */
         T vr_palm = DH(0.012, 0.0, 0.0, 0.0);
 
+        T vr_palm_r = vr_palm;
+        if (part_name == "right_hand")
+            vr_palm_r.rotate(R(M_PI, Vector3d::UnitY()));
+
         /* end-effector to palm. */
-        T ee_palm = vr_ee.inverse() * vr_palm;
+        T ee_palm = vr_ee.inverse() * vr_palm_r;
 
         maps_["ee"]["palm"] = ee_palm;
 
@@ -38,7 +47,7 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
 
     /* Map from end-effector to thumb. */
 
-        /* Palm to index0. */
+        /* Palm to thumb0. */
         T palm_thumb0;
         palm_thumb0 = Tr(Vector3d(0.039, 0.012, 0.0025));
         palm_thumb0.rotate(R(4.76364 * M_PI / 180.0, Vector3d::UnitY()) * R(-29.04 * M_PI / 180.0, Vector3d::UnitZ()));
@@ -90,8 +99,16 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
 
         /* Palm to index0. */
         T palm_index0;
-        palm_index0 = Tr(Vector3d(0.06425, 0.02622, -0.0067));
-        palm_index0.rotate(R(5.0 * M_PI / 180.0, Vector3d::UnitX()) * R(4.1 * M_PI / 180.0, Vector3d::UnitZ()));
+        if (part_name == "left_hand")
+        {
+            palm_index0 = Tr(Vector3d(0.06425, 0.02622, -0.0067));
+            palm_index0.rotate(R(5.0 * M_PI / 180.0, Vector3d::UnitX()) * R(4.1 * M_PI / 180.0, Vector3d::UnitZ()));
+        }
+        else
+        {
+            palm_index0 = Tr(Vector3d(0.06425, -0.02622, -0.0067));
+            palm_index0.rotate(R(-5.0 * M_PI / 180.0, Vector3d::UnitX()) * R(-4.1 * M_PI / 180.0, Vector3d::UnitZ()));
+        }
 
         /* Virtual root to index0. */
         T vr_index0 = vr_palm * palm_index0;
@@ -101,13 +118,26 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
 
         maps_["ee"]["index0"] = ee_index0;
 
+        /* index0 to index0_r. */
+        T index0_index0_r = T::Identity();
+        if (part_name == "right_hand")
+            index0_index0_r.rotate(R(M_PI, Vector3d::UnitY()));
+        maps_["index0"]["index0_r"] = index0_index0_r;
+
         /* index0 to index1. */
-        T index0_index1 = DH(0.0, 0.0, 0.0148, M_PI / 2.0) * DH(0.00175, 0.0, 0.0, 0.0);
+        T index0_index1;
+        if (part_name == "left_hand")
+            index0_index1 = DH(0.0, 0.0, 0.0148, M_PI / 2.0) * DH(0.00175, 0.0, 0.0, 0.0);
+        else
+            index0_index1 = DH(0.0, 0.0, 0.0148, M_PI / 2.0) * DH(-0.00175, 0.0, 0.0, 0.0);
         maps_["index0"]["index1"] = index0_index1;
 
         /* index1 to index1_r. */
         T index1_index1_r = T::Identity();
-        index1_index1_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        if (part_name == "left_hand")
+            index1_index1_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        else
+            index1_index1_r.rotate(R(M_PI, Vector3d::UnitX()));
         maps_["index1"]["index1_r"] = index1_index1_r;
 
         /* index1 to index2. */
@@ -115,7 +145,10 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
         maps_["index1"]["index2"] = index1_index2;
 
         T index2_index2_r = T::Identity();
-        index2_index2_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        if (part_name == "left_hand")
+            index2_index2_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        else
+            index2_index2_r.rotate(R(M_PI, Vector3d::UnitX()));
         maps_["index2"]["index2_r"] = index2_index2_r;
 
         /* index2 to index3. */
@@ -132,7 +165,10 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
 
         /* Palm to middle0. */
         T palm_middle0;
-        palm_middle0 = Tr(Vector3d(0.065, 0.00977, -0.0076));
+        if (part_name == "left_hand")
+            palm_middle0 = Tr(Vector3d(0.065, 0.00977, -0.0076));
+        else
+            palm_middle0 = Tr(Vector3d(0.065, -0.00977, -0.0076));
 
         /* Virtual root to middle0. */
         T vr_middle0 = vr_palm * palm_middle0;
@@ -144,16 +180,26 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
 
         /* middle0 to middle0_r. */
         T middle0_middle0_r = T::Identity();
-        middle0_middle0_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI / 2.0, Vector3d::UnitZ()));
+        if (part_name == "left_hand")
+            middle0_middle0_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI / 2.0, Vector3d::UnitZ()));
+        else
+            middle0_middle0_r = Tr(Vector3d(0.0, 0.0, 0.0035));
         maps_["middle0"]["middle0_r"] = middle0_middle0_r;
 
         /* middle0 to middle1. */
-        T middle0_middle1 = DH(0.0, 0.0, 0.0153, M_PI / 2.0) * DH(0.0022, 0.0, 0.0, 0.0);
+        T middle0_middle1;
+        if (part_name == "left_hand")
+            middle0_middle1 = DH(0.0, 0.0, 0.0153, M_PI / 2.0) * DH(0.0022, 0.0, 0.0, 0.0);
+        else
+            middle0_middle1 = DH(0.0, 0.0, 0.0153, M_PI / 2.0) * DH(-0.0022, 0.0, 0.0, 0.0);
         maps_["middle0"]["middle1"] = middle0_middle1;
 
         /* middle1 to middle1_r. */
         T middle1_middle1_r = T::Identity();
-        middle1_middle1_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        if (part_name == "left_hand")
+            middle1_middle1_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        else
+            middle1_middle1_r.rotate(R(M_PI, Vector3d::UnitX()));
         maps_["middle1"]["middle1_r"] = middle1_middle1_r;
 
         /* middle1 to middle2. */
@@ -165,7 +211,11 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
         maps_["middle2"]["middle2_r"] = middle2_middle2_r;
 
         /* middle2 to middle3. */
-        T middle2_middle3 = DH(0.0, 0.0, 0.024, 0.0);
+        T middle2_middle3;
+        if (part_name == "left_hand")
+            middle2_middle3 = DH(0.0, 0.0, 0.024, 0.0);
+        else
+            middle2_middle3 = DH(0.0, 0.0, 0.0258, 0.0);
         maps_["middle2"]["middle3"] = middle2_middle3;
 
         T middle3_middle3_r = T::Identity();
@@ -178,8 +228,16 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
 
         /* Palm to ring0. */
         T palm_ring0;
-        palm_ring0 = Tr(Vector3d(0.06413, -0.00565, -0.007));
-        palm_ring0.rotate(R(-5.0 * M_PI / 180.0, Vector3d::UnitY()) * R(-6.1 * M_PI / 180.0, Vector3d::UnitZ()));
+        if (part_name == "left_hand")
+        {
+            palm_ring0 = Tr(Vector3d(0.06413, -0.00565, -0.007));
+            palm_ring0.rotate(R(-5.0 * M_PI / 180.0, Vector3d::UnitY()) * R(-6.1 * M_PI / 180.0, Vector3d::UnitZ()));
+        }
+        else
+        {
+            palm_ring0 = Tr(Vector3d(0.06413, 0.00565, -0.007));
+            palm_ring0.rotate(R(5.0 * M_PI / 180.0, Vector3d::UnitY()) * R(6.1 * M_PI / 180.0, Vector3d::UnitZ()));
+        }
 
         /* Virtual root to ring0. */
         T vr_ring0 = vr_palm * palm_ring0;
@@ -189,13 +247,24 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
 
         maps_["ee"]["ring0"] = ee_ring0;
 
+        /* ring0 to ring0_r. */
+        T ring0_ring0_r = T::Identity();
+        if (part_name == "right_hand")
+            ring0_ring0_r.rotate(R(M_PI, Vector3d::UnitY()));
+        maps_["ring0"]["ring0_r"] = ring0_ring0_r;
+
         /* ring0 to ring1. */
-        T ring0_ring1 = DH(0.0, 0.0, 0.0148, M_PI / 2.0) * DH(0.00175, 0.0, 0.0, 0.0);
+        T ring0_ring1;
+        if (part_name == "left_hand")
+            ring0_ring1 = DH(0.0, 0.0, 0.0148, M_PI / 2.0) * DH(0.00175, 0.0, 0.0, 0.0);
+        else
+            ring0_ring1 = DH(0.0, 0.0, 0.0148, M_PI / 2.0) * DH(-0.00175, 0.0, 0.0, 0.0);
         maps_["ring0"]["ring1"] = ring0_ring1;
 
         /* ring1 to ring1_r. */
         T ring1_ring1_r = T::Identity();
-        ring1_ring1_r.rotate(R(M_PI, Vector3d::UnitZ()) * R(M_PI / 2.0, Vector3d::UnitX()));
+        if (part_name == "left_hand")
+            ring1_ring1_r.rotate(R(M_PI, Vector3d::UnitZ()) * R(M_PI / 2.0, Vector3d::UnitX()));
         maps_["ring1"]["ring1_r"] = ring1_ring1_r;
 
         /* ring1 to ring2. */
@@ -203,7 +272,10 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
         maps_["ring1"]["ring2"] = ring1_ring2;
 
         T ring2_ring2_r = T::Identity();
-        ring2_ring2_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        if (part_name == "left_hand")
+            ring2_ring2_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        else
+            ring2_ring2_r.rotate(R(M_PI, Vector3d::UnitX()));
         maps_["ring2"]["ring2_r"] = ring2_ring2_r;
 
         /* ring2 to ring3. */
@@ -220,8 +292,16 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
 
         /* Palm to ring0. */
         T palm_little0;
-        palm_little0 = Tr(Vector3d(0.06211, -0.02454, -0.006));
-        palm_little0.rotate(R(-5.0 * M_PI / 180.0, Vector3d::UnitY()) * R(-6.1 * M_PI / 180.0, Vector3d::UnitZ()));
+        if (part_name == "left_hand")
+        {
+            palm_little0 = Tr(Vector3d(0.06211, -0.02454, -0.006));
+            palm_little0.rotate(R(-5.0 * M_PI / 180.0, Vector3d::UnitY()) * R(-6.1 * M_PI / 180.0, Vector3d::UnitZ()));
+        }
+        else
+        {
+            palm_little0 = Tr(Vector3d(0.06211, 0.02454, -0.006));
+            palm_little0.rotate(R(5.0 * M_PI / 180.0, Vector3d::UnitY()) * R(6.1 * M_PI / 180.0, Vector3d::UnitZ()));
+        }
 
         /* Virtual root to little0. */
         T vr_little0 = vr_palm * palm_little0;
@@ -233,16 +313,26 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
 
         /* little0 to little0_r. */
         T little0_little0_r = T::Identity();
-        little0_little0_r.rotate(R(-1.0 * M_PI / 2.0, Vector3d::UnitZ()) * R(-1.0 * M_PI / 2.0, Vector3d::UnitY()));
+        if (part_name == "left_hand")
+            little0_little0_r.rotate(R(-1.0 * M_PI / 2.0, Vector3d::UnitZ()) * R(-1.0 * M_PI / 2.0, Vector3d::UnitY()));
+        else
+            little0_little0_r = Tr(Vector3d(0.0, 0.0, 0.0038));
         maps_["little0"]["little0_r"] = little0_little0_r;
 
         /* little0 to little1. */
-        T little0_little1 = DH(0.0, 0.0, 0.0148, M_PI / 2.0) * DH(-0.00175, 0.0, 0.0, 0.0);
+        T little0_little1;
+        if (part_name == "left_hand")
+            little0_little1 = DH(0.0, 0.0, 0.0148, M_PI / 2.0) * DH(-0.00175, 0.0, 0.0, 0.0);
+        else
+            little0_little1 = DH(0.0, 0.0, 0.0148, M_PI / 2.0) * DH(0.00175, 0.0, 0.0, 0.0);
         maps_["little0"]["little1"] = little0_little1;
 
         /* little1 to little1_r. */
         T little1_little1_r = T::Identity();
-        little1_little1_r.rotate(R(M_PI / 2.0, Vector3d::UnitZ()) * R(M_PI, Vector3d::UnitY()));
+        if (part_name == "left_hand")
+            little1_little1_r.rotate(R(M_PI / 2.0, Vector3d::UnitZ()) * R(M_PI, Vector3d::UnitY()));
+        else
+            little1_little1_r.rotate(R(M_PI, Vector3d::UnitZ()) * R(M_PI, Vector3d::UnitY()));
         maps_["little1"]["little1_r"] = little1_little1_r;
 
         /* little1 to little2. */
@@ -250,7 +340,10 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
         maps_["little1"]["little2"] = little1_little2;
 
         T little2_little2_r = T::Identity();
-        little2_little2_r.rotate(R(M_PI, Vector3d::UnitZ()));
+        if (part_name == "left_hand")
+            little2_little2_r.rotate(R(M_PI, Vector3d::UnitZ()));
+        else
+            little2_little2_r.rotate(R(M_PI, Vector3d::UnitX()));
         maps_["little2"]["little2_r"] = little2_little2_r;
 
         /* little2 to little3. */
@@ -307,7 +400,7 @@ T iCubForwardKinematics::map(const std::string& from, const std::string& to, con
             T index_3 = index_2 * maps_.at("index2").at("index3") * R(encoders.at("index")(3), Vector3d::UnitZ());
 
             if (to == "index0")
-                map = index_0;
+                map = index_0 * maps_.at("index0").at("index0_r");
             else if (to == "index1")
                 map = index_1 * maps_.at("index1").at("index1_r");
             else if (to == "index2")
@@ -339,7 +432,7 @@ T iCubForwardKinematics::map(const std::string& from, const std::string& to, con
             T ring_3 = ring_2 * maps_.at("ring2").at("ring3") * R(encoders.at("ring")(3), Vector3d::UnitZ());
 
             if (to == "ring0")
-                map = ring_0;
+                map = ring_0 * maps_.at("ring0").at("ring0_r");
             else if (to == "ring1")
                 map = ring_1 * maps_.at("ring1").at("ring1_r");
             else if (to == "ring2")
