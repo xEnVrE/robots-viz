@@ -14,7 +14,8 @@ using Tr = Translation<double, 3>;
 using R = AngleAxisd;
 
 #include <iostream>
-iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name)
+iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name) :
+    part_name_(part_name)
 {
     if ((part_name == "left_hand") || (part_name == "right_hand"))
     {
@@ -370,6 +371,10 @@ T iCubForwardKinematics::map(const std::string& from, const std::string& to, con
 {
     T map;
 
+    int encoder_0_sign = 1;
+    if (part_name_ == "right_hand")
+        encoder_0_sign = -1;
+
     if (from == "ee" && to == "palm")
         map = maps_.at("ee").at("palm");
     else if (from == "ee" && to == "top_cover")
@@ -378,7 +383,7 @@ T iCubForwardKinematics::map(const std::string& from, const std::string& to, con
     {
         if (to.find("thumb") != to.npos)
         {
-            T thumb_0 = maps_.at("ee").at("thumb0") * R(encoders.at("thumb")(0), Vector3d::UnitZ());
+            T thumb_0 = maps_.at("ee").at("thumb0") * R(encoder_0_sign * encoders.at("thumb")(0), Vector3d::UnitZ());
             T thumb_1 = thumb_0 * maps_.at("thumb0").at("thumb1") * R(encoders.at("thumb")(1), Vector3d::UnitZ());
             T thumb_2 = thumb_1 * maps_.at("thumb1").at("thumb2") * R(encoders.at("thumb")(2), Vector3d::UnitZ());
             T thumb_3 = thumb_2 * maps_.at("thumb2").at("thumb3") * R(encoders.at("thumb")(3), Vector3d::UnitZ());
@@ -394,7 +399,7 @@ T iCubForwardKinematics::map(const std::string& from, const std::string& to, con
         }
         else if (to.find("index") != to.npos)
         {
-            T index_0 = maps_.at("ee").at("index0") * R(encoders.at("index")(0), Vector3d::UnitZ());
+            T index_0 = maps_.at("ee").at("index0") * R(encoder_0_sign * encoders.at("index")(0), Vector3d::UnitZ());
             T index_1 = index_0 * maps_.at("index0").at("index1") * R(encoders.at("index")(1), Vector3d::UnitZ());
             T index_2 = index_1 * maps_.at("index1").at("index2") * R(encoders.at("index")(2), Vector3d::UnitZ());
             T index_3 = index_2 * maps_.at("index2").at("index3") * R(encoders.at("index")(3), Vector3d::UnitZ());
@@ -426,7 +431,7 @@ T iCubForwardKinematics::map(const std::string& from, const std::string& to, con
         }
         else if (to.find("ring") != to.npos)
         {
-            T ring_0 = maps_.at("ee").at("ring0") * R(-1 * encoders.at("ring")(0), Vector3d::UnitZ());
+            T ring_0 = maps_.at("ee").at("ring0") * R(-1 * encoder_0_sign * encoders.at("ring")(0), Vector3d::UnitZ());
             T ring_1 = ring_0 * maps_.at("ring0").at("ring1") * R(encoders.at("ring")(1), Vector3d::UnitZ());
             T ring_2 = ring_1 * maps_.at("ring1").at("ring2") * R(encoders.at("ring")(2), Vector3d::UnitZ());
             T ring_3 = ring_2 * maps_.at("ring2").at("ring3") * R(encoders.at("ring")(3), Vector3d::UnitZ());
@@ -442,7 +447,7 @@ T iCubForwardKinematics::map(const std::string& from, const std::string& to, con
         }
         else if (to.find("little") != to.npos)
         {
-            T little_0 = maps_.at("ee").at("little0") * R(-1 * encoders.at("little")(0), Vector3d::UnitZ());
+            T little_0 = maps_.at("ee").at("little0") * R(-1 * encoder_0_sign * encoders.at("little")(0), Vector3d::UnitZ());
             T little_1 = little_0 * maps_.at("little0").at("little1") * R(encoders.at("little")(1), Vector3d::UnitZ());
             T little_2 = little_1 * maps_.at("little1").at("little2") * R(encoders.at("little")(2), Vector3d::UnitZ());
             T little_3 = little_2 * maps_.at("little2").at("little3") * R(encoders.at("little")(3), Vector3d::UnitZ());

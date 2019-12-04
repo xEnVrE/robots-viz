@@ -36,6 +36,8 @@ private:
 
     std::unordered_map<std::string, std::unordered_map<std::string, T>> maps_;
 
+    const std::string part_name_;
+
     const std::string log_name_ = "iCubForwardKinematics";
 };
 
