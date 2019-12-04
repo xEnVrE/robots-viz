@@ -91,28 +91,28 @@ cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_RCShader
                           ALIAS ${LIBRARY_TARGET_NAME}::RCShader
                           NAMESPACE meshes
                           PREFIX __prc
-                          meshes/full_LeftHandPalm_red.obj
-                          meshes/full_LeftThumb0.obj
-                          meshes/full_LeftThumbFinger1.obj
-                          meshes/full_LeftThumbFinger2.obj
-                          meshes/full_LeftThumbFingerTip.obj
-                          meshes/full_LeftIndexFinger0.obj
-                          meshes/full_LeftIndexFinger1.obj
-                          meshes/full_LeftIndexFinger2.obj
-                          meshes/full_LeftIndexFingerTip_b.obj
-                          meshes/full_LeftMiddleFinger0.obj
-                          meshes/full_LeftMiddleFinger1.obj
-                          meshes/full_LeftMiddleFinger2.obj
-                          meshes/full_LeftMiddleFingerTip_b.obj
-                          meshes/full_LeftRingFinger0.obj
-                          meshes/full_LeftRingFinger1.obj
-                          meshes/full_LeftRingFinger2.obj
-                          meshes/full_LeftRingFingerTip_b.obj
-                          meshes/full_LeftLittleFinger0.obj
-                          meshes/full_LeftLittleFinger1.obj
-                          meshes/full_LeftLittleFinger2.obj
-                          meshes/full_LeftLittleFingerTip_b.obj
                           meshes/full_LeftTopCover.obj
+                          meshes/full_LeftHandPalm.obj
+                          meshes/full_LeftThumb0.obj
+                          meshes/full_LeftThumb1.obj
+                          meshes/full_LeftThumb2.obj
+                          meshes/full_LeftThumb3.obj
+                          meshes/full_LeftIndex0.obj
+                          meshes/full_LeftIndex1.obj
+                          meshes/full_LeftIndex2.obj
+                          meshes/full_LeftIndex3.obj
+                          meshes/full_LeftMiddle0.obj
+                          meshes/full_LeftMiddle1.obj
+                          meshes/full_LeftMiddle2.obj
+                          meshes/full_LeftMiddle3.obj
+                          meshes/full_LeftRing0.obj
+                          meshes/full_LeftRing1.obj
+                          meshes/full_LeftRing2.obj
+                          meshes/full_LeftRing3.obj
+                          meshes/full_LeftLittle0.obj
+                          meshes/full_LeftLittle1.obj
+                          meshes/full_LeftLittle2.obj
+                          meshes/full_LeftLittle3.obj
 )
 
 # Create library
