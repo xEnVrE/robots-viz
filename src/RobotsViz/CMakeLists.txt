@@ -113,6 +113,28 @@ cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_RCShader
                           meshes/full_LeftLittle1.obj
                           meshes/full_LeftLittle2.obj
                           meshes/full_LeftLittle3.obj
+                          # meshes/full_RightTopCover.obj
+                          meshes/full_RightHandPalm.obj
+                          meshes/full_RightThumb0.obj
+                          meshes/full_RightThumb1.obj
+                          meshes/full_RightThumb2.obj
+                          meshes/full_RightThumb3.obj
+                          meshes/full_RightIndex0.obj
+                          meshes/full_RightIndex1.obj
+                          meshes/full_RightIndex2.obj
+                          meshes/full_RightIndex3.obj
+                          meshes/full_RightMiddle0.obj
+                          meshes/full_RightMiddle1.obj
+                          meshes/full_RightMiddle2.obj
+                          meshes/full_RightMiddle3.obj
+                          meshes/full_RightRing0.obj
+                          meshes/full_RightRing1.obj
+                          meshes/full_RightRing2.obj
+                          meshes/full_RightRing3.obj
+                          meshes/full_RightLittle0.obj
+                          meshes/full_RightLittle1.obj
+                          meshes/full_RightLittle2.obj
+                          meshes/full_RightLittle3.obj
 )
 
 # Create library
