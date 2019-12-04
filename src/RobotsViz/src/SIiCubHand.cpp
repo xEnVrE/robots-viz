@@ -41,17 +41,25 @@ SIiCubHand::SIiCubHand(const std::string& robot_name, const std::string& lateral
         throw(std::runtime_error(log_name_ + "::ctor. Cannot open hand pose input port."));
 
     /* Load meshes. */
-    std::istringstream top_cover_model_stream;
-    if (laterality == "left")
-        top_cover_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "TopCover.obj").get_data());
-    /* else
-       Mesh still not available */
     std::istringstream palm_model_stream(MeshResources("full_" +  laterality_key + "HandPalm.obj").get_data());
 
-    std::istringstream thumb0_model_stream(MeshResources("full_" +  laterality_key + "Thumb0.obj").get_data());
-    std::istringstream thumb1_model_stream(MeshResources("full_" +  laterality_key + "Thumb1.obj").get_data());
-    std::istringstream thumb2_model_stream(MeshResources("full_" +  laterality_key + "Thumb2.obj").get_data());
-    std::istringstream thumb3_model_stream(MeshResources("full_" +  laterality_key + "Thumb3.obj").get_data());
+    std::istringstream top_cover_model_stream;
+    std::istringstream thumb0_model_stream;
+    std::istringstream thumb1_model_stream;
+    std::istringstream thumb2_model_stream;
+    std::istringstream thumb3_model_stream;
+
+    if (laterality == "left")
+    {
+        top_cover_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "TopCover.obj").get_data());
+
+        thumb0_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb0.obj").get_data());
+        thumb1_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb1.obj").get_data());
+        thumb2_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb2.obj").get_data());
+        thumb3_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb3.obj").get_data());
+    }
+    /* else
+       TODO */
 
     std::istringstream index0_model_stream(MeshResources("full_" +  laterality_key + "Index0.obj").get_data());
     std::istringstream index1_model_stream(MeshResources("full_" +  laterality_key + "Index1.obj").get_data());
@@ -73,13 +81,19 @@ SIiCubHand::SIiCubHand(const std::string& robot_name, const std::string& lateral
     std::istringstream little2_model_stream(MeshResources("full_" +  laterality_key + "Little2.obj").get_data());
     std::istringstream little3_model_stream(MeshResources("full_" +  laterality_key + "Little3.obj").get_data());
 
-    meshes_["top_cover"] = &top_cover_model_stream;
     meshes_["palm"] = &palm_model_stream;
 
-    meshes_["thumb0"] = &thumb0_model_stream;
-    meshes_["thumb1"] = &thumb1_model_stream;
-    meshes_["thumb2"] = &thumb2_model_stream;
-    meshes_["thumb3"] = &thumb3_model_stream;
+    if (laterality == "left")
+    {
+        meshes_["top_cover"] = &top_cover_model_stream;
+
+        meshes_["thumb0"] = &thumb0_model_stream;
+        meshes_["thumb1"] = &thumb1_model_stream;
+        meshes_["thumb2"] = &thumb2_model_stream;
+        meshes_["thumb3"] = &thumb3_model_stream;
+    }
+    /* else
+       TODO */
 
     meshes_["index0"] = &index0_model_stream;
     meshes_["index1"] = &index1_model_stream;
