@@ -45,6 +45,6 @@ target_link_libraries(... RobotsViz::RobotsViz ...)
 - `VtkContent`: abstract class for a content to be displayed;
 - `VtkPointCloud`: point cloud obtained from the depth channel of a `RobotsIO::Camera::Camera`;
 - `VtkMeshOBJ`: mesh obtained from a OBJ file;
-- `VtkiCubHand`: visualization of the `iCubHand` (left only, right to be added soon) (requires `YARP`)
+- `VtkiCubHand`: visualization of the `iCubHand` (requires `YARP`)
 - `SIiCubHand`: rendering of the contour of a `iCubHand` according to the point of view of a `RobotsIO::Camera::Camera` (requires `YARP` and `SuperimposeMesh`)
 
