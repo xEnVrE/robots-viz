@@ -122,7 +122,7 @@ SIiCubHand::SIiCubHand(const std::string& robot_name, const std::string& lateral
     /* Initialize rendering engine. */
     renderer_ = std::unique_ptr<SICAD>
     (
-        new SICAD(meshes_, parameters.width, parameters.height, parameters.fx, parameters.fy, parameters.cx, parameters.cy)
+        new SICAD(meshes_, parameters.width(), parameters.height(), parameters.fx(), parameters.fy(), parameters.cx(), parameters.cy())
     );
     renderer_->setOglToCam({1.0, 0.0, 0.0, static_cast<float>(M_PI)});
 

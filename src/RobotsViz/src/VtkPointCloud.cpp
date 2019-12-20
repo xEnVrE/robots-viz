@@ -41,8 +41,8 @@ VtkPointCloud::VtkPointCloud(std::unique_ptr<Camera> camera) :
     std::tie(valid_parameters, camera_parameters_) = camera_->parameters();
 
     /* Cache image coordinates. */
-    for (std::size_t u = 0; u < camera_parameters_.width; u++)
-        for (std::size_t v = 0; v < camera_parameters_.height; v++ )
+    for (std::size_t u = 0; u < camera_parameters_.width(); u++)
+        for (std::size_t v = 0; v < camera_parameters_.height(); v++ )
             image_coordinates_.push_back(cv::Point(u, v));
 }
 
@@ -118,7 +118,7 @@ bool VtkPointCloud::update(const bool& blocking)
             const int& u = image_coordinates_.at(i).x;
             const int& v = image_coordinates_.at(i).y;
 
-            points.col(j) = deprojection_matrix.col(u * camera_parameters_.height + v) * depth(v, u);
+            points.col(j) = deprojection_matrix.col(u * camera_parameters_.height() + v) * depth(v, u);
 
             j++;
         }
