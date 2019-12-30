@@ -5,11 +5,14 @@
  * GPL-2+ license. See the accompanying LICENSE file for details.
  */
 
+#include <RobotsViz/MeshResources.h>
 #include <RobotsViz/VtkiCubHand.h>
+
 
 #include <RobotsIO/Hand/iCubHand.h>
 
 #include <unordered_map>
+#include "RobotsViz/MeshResources.h"
 
 #include <yarp/eigen/Eigen.h>
 
@@ -39,39 +42,39 @@ VtkiCubHand::VtkiCubHand(const std::string& robot_name, const std::string& later
         throw(std::runtime_error(log_name_ + "::ctor. Cannot open hand pose input port."));
 
     /* Add meshes of hand parts. */
-    meshes_.emplace("palm", VtkMeshOBJ("full_" +  laterality_key + "HandPalm.obj", true, color, opacity));
+    meshes_.emplace("palm", VtkMeshOBJ(MeshResources("full_" +  laterality_key + "HandPalm.obj"), color, opacity));
 
     if (laterality == "left")
     {
-        meshes_.emplace("top_cover", VtkMeshOBJ("full_" +  laterality_key + "TopCover.obj", true, color, opacity));
+        meshes_.emplace("top_cover", VtkMeshOBJ(MeshResources("full_" +  laterality_key + "TopCover.obj"), color, opacity));
 
-        meshes_.emplace("thumb0", VtkMeshOBJ("full_" + laterality_key + "Thumb0.obj", true, color, opacity));
-        meshes_.emplace("thumb1", VtkMeshOBJ("full_" + laterality_key + "Thumb1.obj", true, color, opacity));
-        meshes_.emplace("thumb2", VtkMeshOBJ("full_" + laterality_key + "Thumb2.obj", true, color, opacity));
-        meshes_.emplace("thumb3", VtkMeshOBJ("full_" + laterality_key + "Thumb3.obj", true, color, opacity));
+        meshes_.emplace("thumb0", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb0.obj"), color, opacity));
+        meshes_.emplace("thumb1", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb1.obj"), color, opacity));
+        meshes_.emplace("thumb2", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb2.obj"), color, opacity));
+        meshes_.emplace("thumb3", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb3.obj"), color, opacity));
     }
     /* else
        TODO */
 
-    meshes_.emplace("index0", VtkMeshOBJ("full_" + laterality_key + "Index0.obj", true, color, opacity));
-    meshes_.emplace("index1", VtkMeshOBJ("full_" + laterality_key + "Index1.obj", true, color, opacity));
-    meshes_.emplace("index2", VtkMeshOBJ("full_" + laterality_key + "Index2.obj", true, color, opacity));
-    meshes_.emplace("index3", VtkMeshOBJ("full_" + laterality_key + "Index3.obj", true, color, opacity));
+    meshes_.emplace("index0", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Index0.obj"), color, opacity));
+    meshes_.emplace("index1", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Index1.obj"), color, opacity));
+    meshes_.emplace("index2", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Index2.obj"), color, opacity));
+    meshes_.emplace("index3", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Index3.obj"), color, opacity));
 
-    meshes_.emplace("middle0", VtkMeshOBJ("full_" + laterality_key + "Middle0.obj", true, color, opacity));
-    meshes_.emplace("middle1", VtkMeshOBJ("full_" + laterality_key + "Middle1.obj", true, color, opacity));
-    meshes_.emplace("middle2", VtkMeshOBJ("full_" + laterality_key + "Middle2.obj", true, color, opacity));
-    meshes_.emplace("middle3", VtkMeshOBJ("full_" + laterality_key + "Middle3.obj", true, color, opacity));
+    meshes_.emplace("middle0", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Middle0.obj"), color, opacity));
+    meshes_.emplace("middle1", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Middle1.obj"), color, opacity));
+    meshes_.emplace("middle2", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Middle2.obj"), color, opacity));
+    meshes_.emplace("middle3", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Middle3.obj"), color, opacity));
 
-    meshes_.emplace("ring0", VtkMeshOBJ("full_" + laterality_key + "Ring0.obj", true, color, opacity));
-    meshes_.emplace("ring1", VtkMeshOBJ("full_" + laterality_key + "Ring1.obj", true, color, opacity));
-    meshes_.emplace("ring2", VtkMeshOBJ("full_" + laterality_key + "Ring2.obj", true, color, opacity));
-    meshes_.emplace("ring3", VtkMeshOBJ("full_" + laterality_key + "Ring3.obj", true, color, opacity));
+    meshes_.emplace("ring0", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Ring0.obj"), color, opacity));
+    meshes_.emplace("ring1", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Ring1.obj"), color, opacity));
+    meshes_.emplace("ring2", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Ring2.obj"), color, opacity));
+    meshes_.emplace("ring3", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Ring3.obj"), color, opacity));
 
-    meshes_.emplace("little0", VtkMeshOBJ("full_" + laterality_key + "Little0.obj", true, color, opacity));
-    meshes_.emplace("little1", VtkMeshOBJ("full_" + laterality_key + "Little1.obj", true, color, opacity));
-    meshes_.emplace("little2", VtkMeshOBJ("full_" + laterality_key + "Little2.obj", true, color, opacity));
-    meshes_.emplace("little3", VtkMeshOBJ("full_" + laterality_key + "Little3.obj", true, color, opacity));
+    meshes_.emplace("little0", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Little0.obj"), color, opacity));
+    meshes_.emplace("little1", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Little1.obj"), color, opacity));
+    meshes_.emplace("little2", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Little2.obj"), color, opacity));
+    meshes_.emplace("little3", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Little3.obj"), color, opacity));
 
     /* Configure forward kinematics. */
     forward_kinematics_ = std::unique_ptr<iCubForwardKinematics>
