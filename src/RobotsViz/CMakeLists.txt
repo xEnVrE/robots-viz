@@ -91,6 +91,16 @@ if (USE_SUPERIMPOSE AND USE_YARP)
     )
 endif()
 
+if (USE_OTL)
+    list(APPEND ${LIBRARY_TARGET_NAME}_HDR
+         include/RobotsViz/MeshResourcesOTL.h
+    )
+
+    list(APPEND ${LIBRARY_TARGET_NAME}_SRC
+         src/MeshResourcesOTL.cpp
+    )
+endif()
+
 # List of shader files
 # TODO: To be moved somewhere else
 cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_RCShader
