@@ -61,13 +61,13 @@ endif()
 # options for YARP and SuperimposeMesh
 option(USE_SUPERIMPOSE "Use SuperimposeMesh" OFF)
 option(USE_YARP        "Use YARP"            OFF)
+option(USE_OTL         "Use ObjectTrackingLibrary" OFF)
 
 # Library sources
 add_subdirectory(src)
 
 # Install the files necessary to call find_package(LibTemplateCMake) in CMake projects
 
-# It seems that we need to force dependencies here for YARP and ICUB
 set(DEPENDENCIES "Eigen3" "VTK")
 if (USE_YARP)
   set(DEPENDENCIES ${DEPENDENCIES} "YARP COMPONENTS eigen os sig")
@@ -75,7 +75,9 @@ endif()
 if (USE_SUPERIMPOSE)
   set(DEPENDENCIES ${DEPENDENCIES} "SuperimposeMesh")
 endif()
-
+if (USE_OTL)
+  set(DEPENDENCIES ${DEPENDENCIES} "OTL")
+endif()
 
 include(InstallBasicPackageFiles)
 install_basic_package_files(${PROJECT_NAME}
