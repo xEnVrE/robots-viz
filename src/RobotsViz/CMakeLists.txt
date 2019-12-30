@@ -42,6 +42,7 @@ endif()
 # Header files
 list(APPEND ${LIBRARY_TARGET_NAME}_HDR
     include/RobotsViz/MeshResources.h
+    include/RobotsViz/Resources.h
     include/RobotsViz/VtkContainer.h
     include/RobotsViz/VtkContent.h
     include/RobotsViz/VtkMeshOBJ.h
