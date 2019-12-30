@@ -16,8 +16,9 @@ using namespace RobotsIO::Camera;
 using namespace RobotsViz;
 
 
-VtkPointCloud::VtkPointCloud(std::unique_ptr<Camera> camera) :
-    camera_(std::move(camera))
+VtkPointCloud::VtkPointCloud(std::unique_ptr<Camera> camera, const double& far_plane) :
+    camera_(std::move(camera)),
+    far_plane_(far_plane)
 {
     /* Configure VTK. */
     points_ = vtkSmartPointer<vtkPoints>::New();
@@ -93,8 +94,7 @@ bool VtkPointCloud::update(const bool& blocking)
 
         float depth_u_v = depth(image_coordinates_.at(i).y, image_coordinates_.at(i).x);
 
-        double max_depth = 3.0;
-        if ((depth_u_v > 0) && (depth_u_v < max_depth))
+        if ((depth_u_v > 0) && (depth_u_v < far_plane_))
             valid_points(i) = 1;
     }
 

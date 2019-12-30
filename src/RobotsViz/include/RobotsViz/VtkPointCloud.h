@@ -20,6 +20,7 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkVertexGlyphFilter.h>
 
+#include <limits>
 #include <memory>
 #include <string>
 
@@ -31,7 +32,7 @@ namespace RobotsViz {
 class RobotsViz::VtkPointCloud : public RobotsViz::VtkContent
 {
 public:
-    VtkPointCloud(std::unique_ptr<RobotsIO::Camera::Camera> camera);
+    VtkPointCloud(std::unique_ptr<RobotsIO::Camera::Camera> camera, const double& far_plane_ = std::numeric_limits<double>::infinity());
 
     virtual ~VtkPointCloud();
 
@@ -61,6 +62,8 @@ private:
     RobotsIO::Camera::CameraParameters camera_parameters_;
 
     std::vector<cv::Point> image_coordinates_;
+
+    const double far_plane_;
 
     const std::string log_name_ = "VtkPointCloud";
 };
