@@ -39,6 +39,11 @@ if (USE_YARP)
     )
 endif()
 
+if (USE_OTL)
+  # ObjectTrackingLibrary
+  find_package(OTL REQUIRED)
+endif()
+
 # Header files
 list(APPEND ${LIBRARY_TARGET_NAME}_HDR
     include/RobotsViz/MeshResources.h
@@ -143,8 +148,8 @@ add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TAR
 
 target_include_directories(${LIBRARY_TARGET_NAME}
                            PUBLIC
-                             "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-                             "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
+                           "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+                           "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
 
 target_link_libraries(${LIBRARY_TARGET_NAME}
                       PRIVATE
@@ -171,6 +176,15 @@ if (USE_YARP)
                           )
 endif()
 
+if (USE_OTL)
+  target_link_libraries(${LIBRARY_TARGET_NAME} PUBLIC
+                        OTL::OTL
+                        )
+endif()
+
+if (USE_OTL)
+    target_compile_definitions(${LIBRARY_TARGET_NAME} PUBLIC ROBOTSVIZ_USES_OTL)
+endif()
 set_target_properties(${LIBRARY_TARGET_NAME}
                       PROPERTIES
                       VERSION ${${PROJECT_NAME}_VERSION}
