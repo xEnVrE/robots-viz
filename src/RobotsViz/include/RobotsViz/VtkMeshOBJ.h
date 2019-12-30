@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2019 Istituto Italiano di Tecnologia (IIT)
  *
@@ -11,6 +10,8 @@
 
 #include <Eigen/Dense>
 
+#include <RobotsViz/MeshResources.h>
+#include <RobotsViz/VtkContent.h>
 #include <RobotsViz/vtkOBJResource.h>
 
 #include <vtkActor.h>
@@ -27,7 +28,9 @@ namespace RobotsViz {
 class RobotsViz::VtkMeshOBJ
 {
 public:
-    VtkMeshOBJ(const std::string& mesh_path, const bool& use_mesh_resources, const std::tuple<double, double, double>& color, const double& opacity);
+    VtkMeshOBJ(const std::string& mesh_path, const std::tuple<double, double, double>& color, const double& opacity);
+
+    VtkMeshOBJ(const Resources& resource, const std::tuple<double, double, double>& color, const double& opacity);
 
     virtual ~VtkMeshOBJ();
 
@@ -36,6 +39,8 @@ public:
     void set_pose(const Eigen::Transform<double, 3, Eigen::Affine>& pose);
 
 private:
+    void initialize(const std::tuple<double, double, double>& color, const double& opacity);
+
     vtkSmartPointer<vtkOBJResource> reader_;
 
     vtkSmartPointer<vtkPolyDataMapper> mapper_;

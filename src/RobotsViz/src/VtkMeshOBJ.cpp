@@ -6,7 +6,7 @@
  */
 
 #include <RobotsViz/VtkMeshOBJ.h>
-#include <RobotsViz/MeshResources.h>
+#include <RobotsViz/Resources.h>
 
 #include <vtkProperty.h>
 #include <vtkTransform.h>
@@ -15,21 +15,34 @@ using namespace Eigen;
 using namespace RobotsViz;
 
 
-VtkMeshOBJ::VtkMeshOBJ(const std::string& mesh_path, const bool& use_mesh_resources, const std::tuple<double, double, double>& color, const double& opacity)
+VtkMeshOBJ::VtkMeshOBJ(const std::string& mesh_path, const std::tuple<double, double, double>& color, const double& opacity)
 {
-    /* Initialize mesh reader. */
+    /* Open file from local file system. */
     reader_ = vtkSmartPointer<vtkOBJResource>::New();
-    if (use_mesh_resources)
-    {
-        /* Use internal mesh resources system. */
-        MeshResources mesh_resource(mesh_path);
-        reader_->SetFileData(mesh_resource.get_data());
-    }
-    else
-    {
-        /* Open file from local file system. */
-        reader_->SetFileName(mesh_path.c_str());
-    }
+    reader_->SetFileName(mesh_path.c_str());
+
+    /* Initialize vtk entities. */
+    initialize(color, opacity);
+}
+
+
+VtkMeshOBJ::VtkMeshOBJ(const Resources& resources, const std::tuple<double, double, double>& color, const double& opacity)
+{
+    /* Use internal mesh resources system. */
+    reader_ = vtkSmartPointer<vtkOBJResource>::New();
+    reader_->SetFileData(resources.as_string());
+
+    /* Initialize vtk entities. */
+    initialize(color, opacity);
+}
+
+
+VtkMeshOBJ::~VtkMeshOBJ()
+{}
+
+
+void VtkMeshOBJ::initialize(const std::tuple<double, double, double>& color, const double& opacity)
+{
     reader_->Update();
 
     /* Connect to PolyDataMapper. */
@@ -42,10 +55,6 @@ VtkMeshOBJ::VtkMeshOBJ(const std::string& mesh_path, const bool& use_mesh_resour
     mesh_actor_->GetProperty()->SetColor(std::get<0>(color), std::get<1>(color), std::get<2>(color));
     mesh_actor_->GetProperty()->SetOpacity(opacity);
 }
-
-
-VtkMeshOBJ::~VtkMeshOBJ()
-{}
 
 
 void VtkMeshOBJ::add_to_renderer(vtkRenderer& renderer)
