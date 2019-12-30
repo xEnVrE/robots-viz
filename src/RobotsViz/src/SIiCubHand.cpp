@@ -41,7 +41,7 @@ SIiCubHand::SIiCubHand(const std::string& robot_name, const std::string& lateral
         throw(std::runtime_error(log_name_ + "::ctor. Cannot open hand pose input port."));
 
     /* Load meshes. */
-    std::istringstream palm_model_stream(MeshResources("full_" +  laterality_key + "HandPalm.obj").get_data());
+    std::istringstream palm_model_stream(MeshResources("full_" +  laterality_key + "HandPalm.obj").as_string());
 
     std::istringstream top_cover_model_stream;
     std::istringstream thumb0_model_stream;
@@ -51,35 +51,35 @@ SIiCubHand::SIiCubHand(const std::string& robot_name, const std::string& lateral
 
     if (laterality == "left")
     {
-        top_cover_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "TopCover.obj").get_data());
+        top_cover_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "TopCover.obj").as_string());
 
-        thumb0_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb0.obj").get_data());
-        thumb1_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb1.obj").get_data());
-        thumb2_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb2.obj").get_data());
-        thumb3_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb3.obj").get_data());
+        thumb0_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb0.obj").as_string());
+        thumb1_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb1.obj").as_string());
+        thumb2_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb2.obj").as_string());
+        thumb3_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb3.obj").as_string());
     }
     /* else
        TODO */
 
-    std::istringstream index0_model_stream(MeshResources("full_" +  laterality_key + "Index0.obj").get_data());
-    std::istringstream index1_model_stream(MeshResources("full_" +  laterality_key + "Index1.obj").get_data());
-    std::istringstream index2_model_stream(MeshResources("full_" +  laterality_key + "Index2.obj").get_data());
-    std::istringstream index3_model_stream(MeshResources("full_" +  laterality_key + "Index3.obj").get_data());
+    std::istringstream index0_model_stream(MeshResources("full_" +  laterality_key + "Index0.obj").as_string());
+    std::istringstream index1_model_stream(MeshResources("full_" +  laterality_key + "Index1.obj").as_string());
+    std::istringstream index2_model_stream(MeshResources("full_" +  laterality_key + "Index2.obj").as_string());
+    std::istringstream index3_model_stream(MeshResources("full_" +  laterality_key + "Index3.obj").as_string());
 
-    std::istringstream middle0_model_stream(MeshResources("full_" +  laterality_key + "Middle0.obj").get_data());
-    std::istringstream middle1_model_stream(MeshResources("full_" +  laterality_key + "Middle1.obj").get_data());
-    std::istringstream middle2_model_stream(MeshResources("full_" +  laterality_key + "Middle2.obj").get_data());
-    std::istringstream middle3_model_stream(MeshResources("full_" +  laterality_key + "Middle3.obj").get_data());
+    std::istringstream middle0_model_stream(MeshResources("full_" +  laterality_key + "Middle0.obj").as_string());
+    std::istringstream middle1_model_stream(MeshResources("full_" +  laterality_key + "Middle1.obj").as_string());
+    std::istringstream middle2_model_stream(MeshResources("full_" +  laterality_key + "Middle2.obj").as_string());
+    std::istringstream middle3_model_stream(MeshResources("full_" +  laterality_key + "Middle3.obj").as_string());
 
-    std::istringstream ring0_model_stream(MeshResources("full_" +  laterality_key + "Ring0.obj").get_data());
-    std::istringstream ring1_model_stream(MeshResources("full_" +  laterality_key + "Ring1.obj").get_data());
-    std::istringstream ring2_model_stream(MeshResources("full_" +  laterality_key + "Ring2.obj").get_data());
-    std::istringstream ring3_model_stream(MeshResources("full_" +  laterality_key + "Ring3.obj").get_data());
+    std::istringstream ring0_model_stream(MeshResources("full_" +  laterality_key + "Ring0.obj").as_string());
+    std::istringstream ring1_model_stream(MeshResources("full_" +  laterality_key + "Ring1.obj").as_string());
+    std::istringstream ring2_model_stream(MeshResources("full_" +  laterality_key + "Ring2.obj").as_string());
+    std::istringstream ring3_model_stream(MeshResources("full_" +  laterality_key + "Ring3.obj").as_string());
 
-    std::istringstream little0_model_stream(MeshResources("full_" +  laterality_key + "Little0.obj").get_data());
-    std::istringstream little1_model_stream(MeshResources("full_" +  laterality_key + "Little1.obj").get_data());
-    std::istringstream little2_model_stream(MeshResources("full_" +  laterality_key + "Little2.obj").get_data());
-    std::istringstream little3_model_stream(MeshResources("full_" +  laterality_key + "Little3.obj").get_data());
+    std::istringstream little0_model_stream(MeshResources("full_" +  laterality_key + "Little0.obj").as_string());
+    std::istringstream little1_model_stream(MeshResources("full_" +  laterality_key + "Little1.obj").as_string());
+    std::istringstream little2_model_stream(MeshResources("full_" +  laterality_key + "Little2.obj").as_string());
+    std::istringstream little3_model_stream(MeshResources("full_" +  laterality_key + "Little3.obj").as_string());
 
     meshes_["palm"] = &palm_model_stream;
 
