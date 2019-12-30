@@ -8,8 +8,7 @@
 #ifndef ROBOTSVIZ_MESHRESOURCES_H
 #define ROBOTSVIZ_MESHRESOURCES_H
 
-#include <cmrc/cmrc.hpp>
-CMRC_DECLARE(meshes);
+#include <RobotsViz/Resources.h>
 
 #include <string>
 
@@ -18,14 +17,14 @@ namespace RobotsViz {
 }
 
 
-class RobotsViz::MeshResources
+class RobotsViz::MeshResources : public RobotsViz::Resources
 {
 public:
-    MeshResources(const std::string& name);
+    MeshResources(const std::string& name, const std::string& set_name = "meshes");
 
     virtual ~MeshResources();
 
-    const std::string& get_data() const;
+    virtual const std::string& as_string() const override;
 
 private:
     std::string data_;
