@@ -51,6 +51,7 @@ list(APPEND ${LIBRARY_TARGET_NAME}_HDR
     include/RobotsViz/VtkContainer.h
     include/RobotsViz/VtkContent.h
     include/RobotsViz/VtkMeshOBJ.h
+    include/RobotsViz/VtkObject.h
     include/RobotsViz/VtkPointCloud.h
     include/RobotsViz/VtkReferenceFrame.h
     include/RobotsViz/VtkUpdateHandler.h
@@ -64,6 +65,7 @@ list(APPEND ${LIBRARY_TARGET_NAME}_SRC
     src/VtkContainer.cpp
     src/VtkContent.cpp
     src/VtkMeshOBJ.cpp
+    src/VtkObject.cpp
     src/VtkPointCloud.cpp
     src/VtkReferenceFrame.cpp
     src/VtkUpdateHandler.cpp
