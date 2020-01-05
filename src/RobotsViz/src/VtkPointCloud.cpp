@@ -35,7 +35,7 @@ VtkPointCloud::VtkPointCloud(std::unique_ptr<Camera> camera, const double& far_p
 
     actor_ = vtkSmartPointer<vtkActor>::New();
     actor_->SetMapper(mapper_);
-    actor_->GetProperty()->SetPointSize(1.0);
+    actor_->GetProperty()->SetPointSize(2);
 
     /* Cache camera parameters. */
     bool valid_parameters = false;
