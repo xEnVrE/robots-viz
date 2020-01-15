@@ -68,7 +68,7 @@ add_subdirectory(src)
 
 # Install the files necessary to call find_package(LibTemplateCMake) in CMake projects
 
-set(DEPENDENCIES "Eigen3" "VTK")
+set(DEPENDENCIES "Eigen3" "RobotsIO" "VTK")
 if (USE_YARP)
   set(DEPENDENCIES ${DEPENDENCIES} "YARP COMPONENTS eigen os sig")
 endif()
