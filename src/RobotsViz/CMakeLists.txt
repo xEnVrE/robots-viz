@@ -52,6 +52,7 @@ list(APPEND ${LIBRARY_TARGET_NAME}_HDR
     include/RobotsViz/VtkContent.h
     include/RobotsViz/VtkMeshOBJ.h
     include/RobotsViz/VtkObject.h
+    include/RobotsViz/VtkOrientationCube.h
     include/RobotsViz/VtkPointCloud.h
     include/RobotsViz/VtkReferenceFrame.h
     include/RobotsViz/VtkUpdateHandler.h
@@ -66,6 +67,7 @@ list(APPEND ${LIBRARY_TARGET_NAME}_SRC
     src/VtkContent.cpp
     src/VtkMeshOBJ.cpp
     src/VtkObject.cpp
+    src/VtkOrientationCube.cpp
     src/VtkPointCloud.cpp
     src/VtkReferenceFrame.cpp
     src/VtkUpdateHandler.cpp
@@ -153,6 +155,7 @@ cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_RCShader
                           meshes/full_RightLittle1.obj
                           meshes/full_RightLittle2.obj
                           meshes/full_RightLittle3.obj
+                          meshes/cube.obj
 )
 
 # Create library
