@@ -25,7 +25,8 @@ VtkObject::VtkObject
     std::unique_ptr<RobotsIO::Utils::Transform> object_transform,
     const std::tuple<double, double, double>& color,
     const double& opacity
-)
+) :
+    transform_(std::move(object_transform))
 {
     vtk_mesh_ = std::unique_ptr<VtkMeshOBJ>(new VtkMeshOBJ(mesh_path, color, opacity));
 }
@@ -37,7 +38,8 @@ VtkObject::VtkObject
     std::unique_ptr<RobotsIO::Utils::Transform> object_transform,
     const std::tuple<double, double, double>& color,
     const double& opacity
-)
+) :
+    transform_(std::move(object_transform))
 {
     vtk_mesh_ = std::unique_ptr<VtkMeshOBJ>(new VtkMeshOBJ(mesh_resource, color, opacity));
 }
