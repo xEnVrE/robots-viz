@@ -74,13 +74,10 @@ void VtkObject::add_to_renderer(vtkRenderer& renderer)
 
 bool VtkObject::update(const bool& blocking)
 {
-    bool valid_transform = false;
-    Eigen::Transform<double, 3, Eigen::Affine> transform;
-
-    std::tie(valid_transform, transform) = transform_->transform(blocking);
+    bool valid_transform = transform_->freeze(blocking);
 
     if (valid_transform)
-        vtk_mesh_->set_pose(transform);
+        vtk_mesh_->set_pose(transform_->transform());
 
     return valid_transform;
 }
