@@ -6,14 +6,27 @@
  */
 
 #include <RobotsViz/VtkContainer.h>
+#include <RobotsViz/VtkManualUpdateHandler.h>
 #include <RobotsViz/VtkUpdateHandler.h>
 
 using namespace RobotsViz;
 
 
-VtkContainer::VtkContainer(const int& period, const int& width, const int& height, const bool& blocking) :
-    period_(period),
-    blocking_(blocking)
+VtkContainer::VtkContainer(const double& period, const int& width, const int& height, const bool& blocking) :
+    VtkContainer(width, height, true, blocking)
+{
+    period_ = period;
+}
+
+
+VtkContainer::VtkContainer(const int& width, const int& height) :
+    VtkContainer(width, height, false, false)
+{}
+
+
+VtkContainer::VtkContainer(const int& width, const int& height, const bool& online, const bool& blocking) :
+    blocking_(blocking),
+    online_(online)
 {
     /* Configure axes. */
     axes_ = vtkSmartPointer<vtkAxesActor>::New();
@@ -24,10 +37,6 @@ VtkContainer::VtkContainer(const int& period, const int& width, const int& heigh
     vtk_camera_ = vtkSmartPointer<vtkCamera>::New();
     vtk_camera_->SetPosition(0.0, 0.0, 0.5);
     vtk_camera_->SetViewUp(-1.0, 0.0, -1.0);
-
-    /* Configure interactor style. */
-    interactor_style_ = vtkSmartPointer<vtkInteractorStyleSwitch>::New();
-    interactor_style_->SetCurrentStyleToTrackballCamera();
 
     /* Configure renderer. */
     renderer_ = vtkSmartPointer<vtkRenderer>::New();
@@ -40,7 +49,23 @@ VtkContainer::VtkContainer(const int& period, const int& width, const int& heigh
 
     render_window_interactor_ = vtkSmartPointer<vtkRenderWindowInteractor>::New();
     render_window_interactor_->SetRenderWindow(render_window_);
-    render_window_interactor_->SetInteractorStyle(interactor_style_);
+
+    /* Configure interactor style. */
+    if (online_)
+    {
+        interactor_style_ = vtkSmartPointer<vtkInteractorStyleSwitch>::New();
+        interactor_style_->SetCurrentStyleToTrackballCamera();
+
+        render_window_interactor_->SetInteractorStyle(interactor_style_);
+    }
+    else
+    {
+        vtkSmartPointer<vtkManualUpdateHandler> manual_update_handler = vtkSmartPointer<vtkManualUpdateHandler>::New();
+        manual_update_handler->SetCurrentRenderer(renderer_);
+        manual_update_handler->set_container(this);
+
+        render_window_interactor_->SetInteractorStyle(manual_update_handler);
+    }
 
     /* Configure orientation widget. */
     orientation_widget_->SetInteractor(render_window_interactor_);
@@ -68,12 +93,16 @@ void VtkContainer::run()
     /* Initialize renderer. */
     render_window_->Render();
     render_window_interactor_->Initialize();
-    render_window_interactor_->CreateRepeatingTimer(period_);
 
-    /* Setup update handler. */
-    vtkSmartPointer<vtkUpdateHandler> update_handler = vtkSmartPointer<vtkUpdateHandler>::New();
-    update_handler->set_container(this);
-    render_window_interactor_->AddObserver(vtkCommand::TimerEvent, update_handler);
+    /* Setup online update handler. */
+    if (online_)
+    {
+        render_window_interactor_->CreateRepeatingTimer(period_);
+
+        vtkSmartPointer<vtkUpdateHandler> update_handler = vtkSmartPointer<vtkUpdateHandler>::New();
+        update_handler->set_container(this);
+        render_window_interactor_->AddObserver(vtkCommand::TimerEvent, update_handler);
+    }
 
     /* Start the actual interaction .*/
     render_window_interactor_->Start();
@@ -81,6 +110,10 @@ void VtkContainer::run()
 
 void VtkContainer::update()
 {
+    /* Update each content .*/
     for (auto& content : contents_)
         content.second->update(blocking_);
+
+    /* Trigger the renderer. */
+    render_window_->Render();
 }

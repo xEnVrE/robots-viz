@@ -28,7 +28,9 @@ namespace RobotsViz {
 class RobotsViz::VtkContainer
 {
 public:
-    VtkContainer(const int& period, const int& width, const int& height, const bool& blocking);
+    VtkContainer(const double& period, const int& width, const int& height, const bool& blocking);
+
+    VtkContainer(const int& width, const int& height);
 
     virtual ~VtkContainer();
 
@@ -39,6 +41,8 @@ public:
     void update();
 
 private:
+    VtkContainer(const int& width, const int& height, const bool& online, const bool& blocking);
+
     std::unordered_map<std::string, std::unique_ptr<VtkContent>> contents_;
 
     vtkSmartPointer<vtkAxesActor> axes_;
@@ -57,7 +61,9 @@ private:
 
     const bool blocking_;
 
-    const int period_;
+    const bool online_;
+
+    int period_;
 };
 
 #endif /* ROBOTSVIZ_VTKCONTAINER_H */
