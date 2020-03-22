@@ -35,6 +35,10 @@ public:
 
     void set_transform(const Eigen::Transform<double, 3, Eigen::Affine>& transform);
 
+    void set_visibility(const bool enable);
+
+    void set_length(const double& length);
+
 private:
     const std::string log_name_ = "VtkReferenceFrame";
 

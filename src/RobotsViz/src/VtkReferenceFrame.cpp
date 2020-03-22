@@ -59,3 +59,18 @@ void VtkReferenceFrame::set_transform(const Eigen::Transform<double, 3, Eigen::A
 {
     transform_ = transform;
 }
+
+
+void VtkReferenceFrame::set_visibility(const bool enable)
+{
+    if (enable)
+        axes_->VisibilityOn();
+    else
+        axes_->VisibilityOff();
+}
+
+
+void VtkReferenceFrame::set_length(const double& length)
+{
+    axes_->SetTotalLength(length, length, length);
+}
