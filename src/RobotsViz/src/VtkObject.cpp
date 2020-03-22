@@ -26,7 +26,7 @@ VtkObject::VtkObject
     const std::tuple<double, double, double>& color,
     const double& opacity
 ) :
-    transform_(std::move(object_transform))
+    VtkObject(std::move(object_transform), color, opacity)
 {
     vtk_mesh_ = std::unique_ptr<VtkMeshOBJ>(new VtkMeshOBJ(mesh_path, color, opacity));
 }
@@ -39,7 +39,7 @@ VtkObject::VtkObject
     const std::tuple<double, double, double>& color,
     const double& opacity
 ) :
-    transform_(std::move(object_transform))
+    VtkObject(std::move(object_transform), color, opacity)
 {
     vtk_mesh_ = std::unique_ptr<VtkMeshOBJ>(new VtkMeshOBJ(mesh_resource, color, opacity));
 }
@@ -53,13 +53,26 @@ VtkObject::VtkObject
     const std::tuple<double, double, double>& color,
     const double& opacity
 ) :
-    transform_(std::move(object_transform))
+    VtkObject(std::move(object_transform), color, opacity)
 {
 
     MeshResourcesOTL mesh_resource(object_parameters);
     vtk_mesh_ = std::unique_ptr<VtkMeshOBJ>(new VtkMeshOBJ(mesh_resource, color, opacity));
 }
 #endif
+
+
+VtkObject::VtkObject
+(
+    std::unique_ptr<Transform> object_transform,
+    const std::tuple<double, double, double>& color,
+    const double& opacity
+) :
+    transform_(std::move(object_transform))
+{
+    vtk_frame_ = std::unique_ptr<VtkReferenceFrame>(new VtkReferenceFrame(0.0));
+    vtk_frame_->set_visibility(false);
+}
 
 
 VtkObject::~VtkObject()
@@ -69,6 +82,9 @@ VtkObject::~VtkObject()
 void VtkObject::add_to_renderer(vtkRenderer& renderer)
 {
     vtk_mesh_->add_to_renderer(renderer);
+
+    if (vtk_frame_ != nullptr)
+        vtk_frame_->add_to_renderer(renderer);
 }
 
 
@@ -77,7 +93,23 @@ bool VtkObject::update(const bool& blocking)
     bool valid_transform = transform_->freeze(blocking);
 
     if (valid_transform)
-        vtk_mesh_->set_pose(transform_->transform());
+    {
+        auto transform = transform_->transform();
+        vtk_mesh_->set_pose(transform);
+
+        if (vtk_frame_ != nullptr)
+        {
+            vtk_frame_->set_transform(transform);
+            vtk_frame_->update(false);
+        }
+    }
 
     return valid_transform;
+}
+
+
+VtkReferenceFrame& VtkObject::get_frame()
+{
+    /* Dereferencing is safe as the frame is always constructed in the ctor. */
+    return *vtk_frame_;
 }

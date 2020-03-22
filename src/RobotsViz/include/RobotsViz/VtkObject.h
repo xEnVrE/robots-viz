@@ -17,6 +17,7 @@
 #include <RobotsViz/Resources.h>
 #include <RobotsViz/VtkContent.h>
 #include <RobotsViz/VtkMeshOBJ.h>
+#include <RobotsViz/VtkReferenceFrame.h>
 
 
 namespace RobotsViz {
@@ -41,12 +42,19 @@ public:
 
     bool update(const bool& blocking) override;
 
+    VtkReferenceFrame& get_frame();
+
+protected:
+    VtkObject(std::unique_ptr<RobotsIO::Utils::Transform> object_transform, const std::tuple<double, double, double>& color, const double& opacity);
+
 private:
     const std::string log_name_ = "VtkObject";
 
     std::unique_ptr<RobotsIO::Utils::Transform> transform_;
 
     std::unique_ptr<VtkMeshOBJ> vtk_mesh_;
+
+    std::unique_ptr<VtkReferenceFrame> vtk_frame_;
 };
 
 #endif /* ROBOTSVIZ_VTJOBJECT_H */
