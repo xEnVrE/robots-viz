@@ -57,6 +57,7 @@ list(APPEND ${LIBRARY_TARGET_NAME}_HDR
     include/RobotsViz/VtkReferenceFrame.h
     include/RobotsViz/VtkUpdateHandler.h
     include/RobotsViz/iCubForwardKinematics.h
+    include/RobotsViz/poisson_disk_sampling.h
     include/RobotsViz/vtkOBJResource.h
 )
 

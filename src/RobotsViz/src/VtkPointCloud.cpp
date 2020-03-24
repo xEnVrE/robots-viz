@@ -6,6 +6,7 @@
  */
 
 #include <RobotsViz/VtkPointCloud.h>
+#include <RobotsViz/poisson_disk_sampling.h>
 
 #include <vtkProperty.h>
 
@@ -16,7 +17,7 @@ using namespace RobotsIO::Camera;
 using namespace RobotsViz;
 
 
-VtkPointCloud::VtkPointCloud(std::unique_ptr<Camera> camera, const double& far_plane) :
+VtkPointCloud::VtkPointCloud(std::unique_ptr<Camera> camera, const double& far_plane, const double& subsampling_radius) :
     camera_(std::move(camera)),
     far_plane_(far_plane)
 {
@@ -42,9 +43,23 @@ VtkPointCloud::VtkPointCloud(std::unique_ptr<Camera> camera, const double& far_p
     std::tie(valid_parameters, camera_parameters_) = camera_->parameters();
 
     /* Cache image coordinates. */
-    for (std::size_t u = 0; u < camera_parameters_.width(); u++)
-        for (std::size_t v = 0; v < camera_parameters_.height(); v++ )
-            image_coordinates_.push_back(cv::Point(u, v));
+    if (subsampling_radius > 0)
+    {
+        /* Subsample image coordinates if require. */
+        auto min_coordinates = std::array<float, 2>{{float(0.0), float(0.0)}};
+        auto max_coordinates = std::array<float, 2>{{float(camera_parameters_.width()), float(camera_parameters_.height())}};
+        auto coordinates = thinks::PoissonDiskSampling(float(subsampling_radius), min_coordinates, max_coordinates);
+
+        for (const auto& pixel : coordinates)
+            image_coordinates_.push_back(cv::Point(pixel[0], pixel[1]));
+    }
+    else
+    {
+        /* Take all the image coordinates otherwise. */
+        for (std::size_t u = 0; u < camera_parameters_.width(); u++)
+            for (std::size_t v = 0; v < camera_parameters_.height(); v++ )
+                image_coordinates_.push_back(cv::Point(u, v));
+    }
 }
 
 
@@ -140,7 +155,7 @@ void VtkPointCloud::set_points(const Ref<const MatrixXd>& points)
     /* Set new points. */
     points_ = vtkSmartPointer<vtkPoints>::New();
 
-    for (std::size_t i=0; i < points.cols(); i++)
+    for (std::size_t i = 0; i < points.cols(); i++)
         points_->InsertNextPoint(points(0, i), points(1, i), points(2, i));
 
     polydata_->SetPoints(points_);

@@ -32,7 +32,7 @@ namespace RobotsViz {
 class RobotsViz::VtkPointCloud : public RobotsViz::VtkContent
 {
 public:
-    VtkPointCloud(std::unique_ptr<RobotsIO::Camera::Camera> camera, const double& far_plane_ = std::numeric_limits<double>::infinity());
+    VtkPointCloud(std::unique_ptr<RobotsIO::Camera::Camera> camera, const double& far_plane_ = std::numeric_limits<double>::infinity(), const double& subsampling_radius = -1);
 
     virtual ~VtkPointCloud();
 
