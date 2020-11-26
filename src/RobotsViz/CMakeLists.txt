@@ -113,6 +113,7 @@ cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_RCShader
                           NAMESPACE meshes
                           PREFIX __prc
                           meshes/full_LeftTopCover.obj
+                          meshes/full_LeftTopCoverMarker.obj
                           meshes/full_LeftHandPalm.obj
                           meshes/full_LeftThumb0.obj
                           meshes/full_LeftThumb1.obj
