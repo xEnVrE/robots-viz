@@ -21,7 +21,7 @@ using namespace RobotsViz;
 using namespace yarp::eigen;
 
 
-SIiCubHand::SIiCubHand(const std::string& robot_name, const std::string& laterality, const std::string& port_prefix, const bool& use_analogs, const bool& use_camera_pose, std::shared_ptr<Camera> camera) :
+SIiCubHand::SIiCubHand(const std::string& meshes_path, const std::string& robot_name, const std::string& laterality, const std::string& port_prefix, const bool& use_analogs, const bool& use_camera_pose, std::shared_ptr<Camera> camera, const bool& use_debug_cover) :
     use_camera_pose_(use_camera_pose),
     camera_(camera)
 {
@@ -41,79 +41,36 @@ SIiCubHand::SIiCubHand(const std::string& robot_name, const std::string& lateral
         throw(std::runtime_error(log_name_ + "::ctor. Cannot open hand pose input port."));
 
     /* Load meshes. */
-    std::istringstream palm_model_stream(MeshResources("full_" +  laterality_key + "HandPalm.obj").as_string());
+    meshes_["palm"] = meshes_path + "/full_" +  laterality_key + "HandPalm.obj";
 
-    std::istringstream top_cover_model_stream;
-    std::istringstream thumb0_model_stream;
-    std::istringstream thumb1_model_stream;
-    std::istringstream thumb2_model_stream;
-    std::istringstream thumb3_model_stream;
+    if (use_debug_cover)
+        meshes_["top_cover"] = meshes_path + "/full_" +  laterality_key + "TopCoverMarker.obj";
+    else
+        meshes_["top_cover"] = meshes_path + "/full_" +  laterality_key + "TopCover.obj";
+    meshes_["thumb0"] = meshes_path + "/full_" +  laterality_key + "Thumb0.obj";
+    meshes_["thumb1"] = meshes_path + "/full_" +  laterality_key + "Thumb1.obj";
+    meshes_["thumb2"] = meshes_path + "/full_" +  laterality_key + "Thumb2.obj";
+    meshes_["thumb3"] = meshes_path + "/full_" +  laterality_key + "Thumb3.obj";
 
-    if (laterality == "left")
-    {
-        top_cover_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "TopCover.obj").as_string());
+    meshes_["index0"] = meshes_path + "/full_" +  laterality_key + "Index0.obj";
+    meshes_["index1"] = meshes_path + "/full_" +  laterality_key + "Index1.obj";
+    meshes_["index2"] = meshes_path + "/full_" +  laterality_key + "Index2.obj";
+    meshes_["index3"] = meshes_path + "/full_" +  laterality_key + "Index3.obj";
 
-        thumb0_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb0.obj").as_string());
-        thumb1_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb1.obj").as_string());
-        thumb2_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb2.obj").as_string());
-        thumb3_model_stream = std::istringstream(MeshResources("full_" +  laterality_key + "Thumb3.obj").as_string());
-    }
-    /* else
-       TODO */
+    meshes_["middle0"] = meshes_path + "/full_" +  laterality_key + "Middle0.obj";
+    meshes_["middle1"] = meshes_path + "/full_" +  laterality_key + "Middle1.obj";
+    meshes_["middle2"] = meshes_path + "/full_" +  laterality_key + "Middle2.obj";
+    meshes_["middle3"] = meshes_path + "/full_" +  laterality_key + "Middle3.obj";
 
-    std::istringstream index0_model_stream(MeshResources("full_" +  laterality_key + "Index0.obj").as_string());
-    std::istringstream index1_model_stream(MeshResources("full_" +  laterality_key + "Index1.obj").as_string());
-    std::istringstream index2_model_stream(MeshResources("full_" +  laterality_key + "Index2.obj").as_string());
-    std::istringstream index3_model_stream(MeshResources("full_" +  laterality_key + "Index3.obj").as_string());
+    meshes_["ring0"] = meshes_path + "/full_" +  laterality_key + "Ring0.obj";
+    meshes_["ring1"] = meshes_path + "/full_" +  laterality_key + "Ring1.obj";
+    meshes_["ring2"] = meshes_path + "/full_" +  laterality_key + "Ring2.obj";
+    meshes_["ring3"] = meshes_path + "/full_" +  laterality_key + "Ring3.obj";
 
-    std::istringstream middle0_model_stream(MeshResources("full_" +  laterality_key + "Middle0.obj").as_string());
-    std::istringstream middle1_model_stream(MeshResources("full_" +  laterality_key + "Middle1.obj").as_string());
-    std::istringstream middle2_model_stream(MeshResources("full_" +  laterality_key + "Middle2.obj").as_string());
-    std::istringstream middle3_model_stream(MeshResources("full_" +  laterality_key + "Middle3.obj").as_string());
-
-    std::istringstream ring0_model_stream(MeshResources("full_" +  laterality_key + "Ring0.obj").as_string());
-    std::istringstream ring1_model_stream(MeshResources("full_" +  laterality_key + "Ring1.obj").as_string());
-    std::istringstream ring2_model_stream(MeshResources("full_" +  laterality_key + "Ring2.obj").as_string());
-    std::istringstream ring3_model_stream(MeshResources("full_" +  laterality_key + "Ring3.obj").as_string());
-
-    std::istringstream little0_model_stream(MeshResources("full_" +  laterality_key + "Little0.obj").as_string());
-    std::istringstream little1_model_stream(MeshResources("full_" +  laterality_key + "Little1.obj").as_string());
-    std::istringstream little2_model_stream(MeshResources("full_" +  laterality_key + "Little2.obj").as_string());
-    std::istringstream little3_model_stream(MeshResources("full_" +  laterality_key + "Little3.obj").as_string());
-
-    meshes_["palm"] = &palm_model_stream;
-
-    if (laterality == "left")
-    {
-        meshes_["top_cover"] = &top_cover_model_stream;
-
-        meshes_["thumb0"] = &thumb0_model_stream;
-        meshes_["thumb1"] = &thumb1_model_stream;
-        meshes_["thumb2"] = &thumb2_model_stream;
-        meshes_["thumb3"] = &thumb3_model_stream;
-    }
-    /* else
-       TODO */
-
-    meshes_["index0"] = &index0_model_stream;
-    meshes_["index1"] = &index1_model_stream;
-    meshes_["index2"] = &index2_model_stream;
-    meshes_["index3"] = &index3_model_stream;
-
-    meshes_["middle0"] = &middle0_model_stream;
-    meshes_["middle1"] = &middle1_model_stream;
-    meshes_["middle2"] = &middle2_model_stream;
-    meshes_["middle3"] = &middle3_model_stream;
-
-    meshes_["ring0"] = &ring0_model_stream;
-    meshes_["ring1"] = &ring1_model_stream;
-    meshes_["ring2"] = &ring2_model_stream;
-    meshes_["ring3"] = &ring3_model_stream;
-
-    meshes_["little0"] = &little0_model_stream;
-    meshes_["little1"] = &little1_model_stream;
-    meshes_["little2"] = &little2_model_stream;
-    meshes_["little3"] = &little3_model_stream;
+    meshes_["little0"] = meshes_path + "/full_" +  laterality_key + "Little0.obj";
+    meshes_["little1"] = meshes_path + "/full_" +  laterality_key + "Little1.obj";
+    meshes_["little2"] = meshes_path + "/full_" +  laterality_key + "Little2.obj";
+    meshes_["little3"] = meshes_path + "/full_" +  laterality_key + "Little3.obj";
 
     /* Get camera parameters. */
     CameraParameters parameters;

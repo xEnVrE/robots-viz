@@ -33,7 +33,7 @@ namespace RobotsViz {
 class RobotsViz::SIiCubHand
 {
 public:
-    SIiCubHand(const std::string& robot_name, const std::string& laterality, const std::string& port_prefix, const bool& use_analogs, const bool& use_camera_pose, std::shared_ptr<RobotsIO::Camera::Camera> camera);
+    SIiCubHand(const std::string& meshes_path, const std::string& robot_name, const std::string& laterality, const std::string& port_prefix, const bool& use_analogs, const bool& use_camera_pose, std::shared_ptr<RobotsIO::Camera::Camera> camera, const bool& use_debug_cover = false);
 
     virtual ~SIiCubHand();
 
@@ -46,7 +46,7 @@ private:
 
     std::unique_ptr<SICAD> renderer_;
 
-    SICAD::ModelStreamContainer meshes_;
+    SICAD::ModelPathContainer meshes_;
 
     yarp::os::BufferedPort<yarp::sig::Vector> hand_pose_port_in_;
 
