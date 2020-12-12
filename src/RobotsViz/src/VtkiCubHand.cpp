@@ -77,9 +77,9 @@ VtkiCubHand::VtkiCubHand(const std::string& robot_name, const std::string& later
     meshes_.emplace("little3", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Little3.obj"), color, opacity));
 
     /* Configure forward kinematics. */
-    forward_kinematics_ = std::unique_ptr<iCubForwardKinematics>
+    forward_kinematics_ = std::unique_ptr<iCubForwardKinematicsiKin>
     (
-        new iCubForwardKinematics(laterality + "_hand")
+        new iCubForwardKinematicsiKin(laterality + "_hand")
     );
 
     /* Configure fingers encoders. */

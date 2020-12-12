@@ -60,6 +60,7 @@ endif()
 
 # options for YARP and SuperimposeMesh
 option(USE_SUPERIMPOSE "Use SuperimposeMesh" OFF)
+option(USE_ICUB        "Use ICUB"            OFF)
 option(USE_YARP        "Use YARP"            OFF)
 option(USE_OTL         "Use ObjectTrackingLibrary" OFF)
 
@@ -71,6 +72,9 @@ add_subdirectory(src)
 set(DEPENDENCIES "Eigen3" "RobotsIO" "VTK")
 if (USE_YARP)
   set(DEPENDENCIES ${DEPENDENCIES} "YARP COMPONENTS eigen os sig")
+endif()
+if (USE_ICUB)
+  set(DEPENDENCIES ${DEPENDENCIES} "ICUB COMPONENTS iKin")
 endif()
 if (USE_SUPERIMPOSE)
   set(DEPENDENCIES ${DEPENDENCIES} "SuperimposeMesh")

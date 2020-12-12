@@ -39,6 +39,14 @@ if (USE_YARP)
     )
 endif()
 
+if (USE_ICUB)
+    # ICUB
+    find_package(ICUB CONFIG REQUIRED
+                 COMPONENTS
+                 iKin
+    )
+endif()
+
 if (USE_OTL)
   # ObjectTrackingLibrary
   find_package(OTL REQUIRED)
@@ -76,12 +84,14 @@ list(APPEND ${LIBRARY_TARGET_NAME}_SRC
     src/vtkOBJResource.cpp
 )
 
-if (USE_YARP)
+if (USE_YARP AND USE_ICUB)
     list(APPEND ${LIBRARY_TARGET_NAME}_HDR
          include/RobotsViz/VtkiCubHand.h
+         include/RobotsViz/iCubForwardKinematicsiKin.h
     )
 
     list(APPEND ${LIBRARY_TARGET_NAME}_SRC
+         src/iCubForwardKinematicsiKin.cpp
          src/VtkiCubHand.cpp
     )
 endif()
@@ -189,6 +199,12 @@ if (USE_YARP)
                           YARP::YARP_init
                           YARP::YARP_os
                           YARP::YARP_sig
+                          )
+endif()
+
+if (USE_ICUB)
+    target_link_libraries(${LIBRARY_TARGET_NAME} PUBLIC
+                          ICUB::iKin
                           )
 endif()
 
