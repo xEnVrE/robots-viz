@@ -13,7 +13,7 @@ using namespace RobotsViz;
 using Tr = Translation<double, 3>;
 using R = AngleAxisd;
 
-#include <iostream>
+
 iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name) :
     part_name_(part_name)
 {
