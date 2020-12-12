@@ -18,6 +18,7 @@ Small C++ library for representing meshes and point clouds in a VTK viewer.
 If the following are enabled, some functionalities related to the iCub robot and/or YARP are also available.
 
 - [`SuperimposeMesh`](https://github.com/robotology/superimpose-mesh-lib)
+- [`ICUB`](https://github.com/robotology/icub-main)
 - [`YARP`](https://github.com/robotology/yarp)
 
 
