@@ -11,7 +11,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(RobotsViz
         LANGUAGES CXX
-        VERSION 0.11.100)
+        VERSION 0.0.100)
 
 set(CMAKE_CXX_STANDARD 11)
 
