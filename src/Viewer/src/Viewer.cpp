@@ -44,12 +44,12 @@ Viewer::Viewer(const ResourceFinder& resource_finder)
     valid_camera_values &= !(camera_cx.isNull()) && camera_cx.isDouble();
     valid_camera_values &= !(camera_cy.isNull()) && camera_cy.isDouble();
 
-    if (!valid_camera_values)
-        throw(std::runtime_error(log_name_ + "::ctor. Camera parameters from configuration are invalid."));
-
     std::unique_ptr<Camera> camera;
     if (camera_source == "YARP")
     {
+        if (!valid_camera_values)
+        throw(std::runtime_error(log_name_ + "::ctor. Camera parameters from configuration are invalid."));
+
         camera = std::unique_ptr<YarpCamera>
         (
             new YarpCamera(camera_width.asInt(),
