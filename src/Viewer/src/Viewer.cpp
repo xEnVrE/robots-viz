@@ -21,7 +21,7 @@ using namespace yarp::os;
 
 Viewer::Viewer(const ResourceFinder& resource_finder)
 {
-    const std::string port_prefix = "robots-viz-object-viewer";
+    const std::string port_prefix = "robots-viz-viewer";
     const bool fps = resource_finder.check("fps", Value(30.0)).asDouble();
 
     const Bottle& camera_bottle = resource_finder.findGroup("CAMERA");
