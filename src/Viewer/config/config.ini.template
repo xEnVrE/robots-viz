@@ -1,0 +1,12 @@
+fps
+
+[CAMERA]
+source
+width
+height
+fx
+fy
+cx
+cy
+far_plane
+subsampling_radius

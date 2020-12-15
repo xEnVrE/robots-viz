@@ -62,6 +62,7 @@ endif()
 option(USE_SUPERIMPOSE "Use SuperimposeMesh" OFF)
 option(USE_YARP        "Use YARP"            OFF)
 option(USE_OTL         "Use ObjectTrackingLibrary" OFF)
+option(BUILD_VIEWER    "Build basic 3D viewer" OFF)
 
 # Library sources
 add_subdirectory(src)

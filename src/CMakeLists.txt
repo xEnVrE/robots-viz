@@ -8,3 +8,7 @@
 #===============================================================================
 
 add_subdirectory(RobotsViz)
+
+if (BUILD_VIEWER)
+   add_subdirectory(Viewer)
+endif()
