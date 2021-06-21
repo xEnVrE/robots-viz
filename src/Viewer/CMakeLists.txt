@@ -9,8 +9,6 @@
 
 set(EXE_TARGET_NAME robots-viz-viewer)
 
-find_package(RobotsViz REQUIRED)
-
 find_package(YARP REQUIRED COMPONENTS os)
 
 set(${EXE_TARGET_NAME}_HDR
@@ -31,7 +29,7 @@ target_include_directories(${EXE_TARGET_NAME}
 
 target_link_libraries(${EXE_TARGET_NAME}
                       PRIVATE
-                      RobotsViz::RobotsViz
+                      RobotsViz
                       YARP::YARP_init
                       YARP::YARP_os
 )
