@@ -12,7 +12,7 @@
 
 #include <RobotsIO/Hand/iCubHand.h>
 
-#include <RobotsViz/iCubForwardKinematics.h>
+#include <RobotsViz/iCubForwardKinematicsiKin.h>
 #include <RobotsViz/VtkContent.h>
 #include <RobotsViz/VtkMeshOBJ.h>
 
@@ -48,7 +48,7 @@ private:
 
     yarp::os::BufferedPort<yarp::sig::Vector> hand_pose_port_in_;
 
-    std::unique_ptr<iCubForwardKinematics> forward_kinematics_;
+    std::unique_ptr<iCubForwardKinematicsiKin> forward_kinematics_;
 
     std::unique_ptr<RobotsIO::Hand::iCubHand> fingers_encoders_;
 
