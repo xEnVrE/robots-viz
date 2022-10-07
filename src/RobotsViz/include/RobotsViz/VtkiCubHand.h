@@ -55,6 +55,8 @@ private:
     const bool use_fingers_;
 
     const std::string log_name_ = "VtkiCubHand";
+
+    yarp::sig::Vector pose_;
 };
 
 #endif /* ROBOTSVIZ_VTKICUBHAND_H */

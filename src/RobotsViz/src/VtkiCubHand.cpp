@@ -90,6 +90,10 @@ VtkiCubHand::VtkiCubHand(const std::string& robot_name, const std::string& later
             new iCubHand(robot_name, laterality, port_prefix + "/vtk-icub-hand", "icub-fingers-encoders", use_analogs)
         );
     }
+
+    pose_.resize(7);
+    pose_.zero();
+    pose_[3] = 1.0;
 }
 
 
@@ -111,8 +115,8 @@ bool VtkiCubHand::update(const bool& blocking)
 {
     yarp::sig::Vector* pose_in = hand_pose_port_in_.read(blocking);
 
-    if (pose_in == nullptr)
-        return false;
+    if (pose_in != nullptr)
+        pose_ = *pose_in;
 
     std::unordered_map<std::string, VectorXd> encoders;
     if (use_fingers_)
@@ -124,13 +128,13 @@ bool VtkiCubHand::update(const bool& blocking)
             return false;
     }
 
-    VectorXd pose = toEigen(*pose_in);
+    VectorXd pose = toEigen(pose_);
     Transform<double, 3, Affine> transform;
     transform = Translation<double, 3>(pose.head<3>());
     transform.rotate(AngleAxisd(pose(6), pose.segment<3>(3)));
 
     /* Palm. */
-    for (auto mesh : meshes_)
+    for (auto& mesh : meshes_)
         if (use_fingers_)
             mesh.second.set_pose(transform * forward_kinematics_->map("ee", mesh.first, encoders));
         else
