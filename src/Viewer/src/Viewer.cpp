@@ -22,7 +22,7 @@ using namespace yarp::os;
 Viewer::Viewer(const ResourceFinder& resource_finder)
 {
     const std::string port_prefix = "robots-viz-viewer";
-    const bool fps = resource_finder.check("fps", Value(30.0)).asDouble();
+    const bool fps = resource_finder.check("fps", Value(30.0)).asFloat64();
 
     const Bottle& camera_bottle = resource_finder.findGroup("CAMERA");
     if (camera_bottle.isNull())
@@ -37,12 +37,12 @@ Viewer::Viewer(const ResourceFinder& resource_finder)
     auto camera_cx = camera_bottle.find("cx");
     auto camera_cy = camera_bottle.find("cy");
 
-    bool valid_camera_values = !(camera_width.isNull()) && camera_width.isInt();
-    valid_camera_values &= !(camera_height.isNull()) && camera_height.isInt();
-    valid_camera_values &= !(camera_fx.isNull()) && camera_fx.isDouble();
-    valid_camera_values &= !(camera_fy.isNull()) && camera_fy.isDouble();
-    valid_camera_values &= !(camera_cx.isNull()) && camera_cx.isDouble();
-    valid_camera_values &= !(camera_cy.isNull()) && camera_cy.isDouble();
+    bool valid_camera_values = !(camera_width.isNull()) && camera_width.isInt32();
+    valid_camera_values &= !(camera_height.isNull()) && camera_height.isInt32();
+    valid_camera_values &= !(camera_fx.isNull()) && camera_fx.isFloat64();
+    valid_camera_values &= !(camera_fy.isNull()) && camera_fy.isFloat64();
+    valid_camera_values &= !(camera_cx.isNull()) && camera_cx.isFloat64();
+    valid_camera_values &= !(camera_cy.isNull()) && camera_cy.isFloat64();
 
     std::unique_ptr<Camera> camera;
     if (camera_source == "YARP")
@@ -52,13 +52,13 @@ Viewer::Viewer(const ResourceFinder& resource_finder)
 
         camera = std::unique_ptr<YarpCamera>
         (
-            new YarpCamera(camera_width.asInt(),
-                           camera_height.asInt(),
-                           camera_fx.asDouble(),
-                           camera_cx.asDouble(),
-                           camera_fy.asDouble(),
-                           camera_cy.asDouble(),
-                           port_prefix)
+            new YarpCamera(camera_width.asInt32(),
+                           camera_height.asInt32(),
+                           camera_fx.asFloat64(),
+                           camera_cx.asFloat64(),
+                           camera_fy.asFloat64(),
+                           camera_cy.asFloat64(),
+                           port_prefix, true)
         );
     }
     else if (camera_source == "RealsenseCamera")
@@ -72,8 +72,8 @@ Viewer::Viewer(const ResourceFinder& resource_finder)
         throw(std::runtime_error(log_name_ + "::ctor. Camera " + camera_source + " is not supported."));
 
     /* Initialize point cloud. */
-    const double far_plane = camera_bottle.check("far_plane", Value(10.0)).asDouble();
-    const double subsampling_radius = camera_bottle.check("subsampling_radius", Value(-1)).asDouble();
+    const double far_plane = camera_bottle.check("far_plane", Value(10.0)).asFloat64();
+    const double subsampling_radius = camera_bottle.check("subsampling_radius", Value(-1)).asFloat64();
     std::unique_ptr<VtkPointCloud> pc = std::unique_ptr<VtkPointCloud>(new VtkPointCloud(std::move(camera), far_plane, subsampling_radius));
 
     vtk_container_ = std::unique_ptr<VtkContainer>(new VtkContainer(1.0 / fps, 600, 600, false));
