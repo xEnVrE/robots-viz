@@ -83,13 +83,18 @@ void VtkContainer::add_content(const std::string& key, std::unique_ptr<VtkConten
     contents_.emplace(key, std::move(content));
 }
 
-
-void VtkContainer::run()
+void VtkContainer::initialize()
 {
     /* Add contents to the renderer. */
     for (auto& content : contents_)
         content.second->add_to_renderer(*renderer_);
+}
 
+
+void VtkContainer::run()
+{
+
+    initialize();
     /* Initialize renderer. */
     render_window_->Render();
     render_window_interactor_->Initialize();

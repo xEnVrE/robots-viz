@@ -36,6 +36,8 @@ public:
 
     void add_content(const std::string& key, std::unique_ptr<VtkContent> content);
 
+    void initialize();
+
     void run();
 
     void update();
