@@ -122,3 +122,18 @@ void VtkContainer::update()
     /* Trigger the renderer. */
     render_window_->Render();
 }
+
+vtkSmartPointer<vtkRenderer> VtkContainer::renderer()
+{
+    return renderer_;
+}
+
+vtkSmartPointer<vtkRenderWindow> VtkContainer::render_window()
+{
+    return render_window_;
+}
+
+void VtkContainer::setOrientationWidgetEnabled(bool enabled)
+{
+    orientation_widget_->SetEnabled(enabled);
+}

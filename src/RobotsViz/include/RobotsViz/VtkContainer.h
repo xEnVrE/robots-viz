@@ -42,6 +42,12 @@ public:
 
     void update();
 
+    vtkSmartPointer<vtkRenderer> renderer();
+
+    vtkSmartPointer<vtkRenderWindow> render_window();
+
+    void setOrientationWidgetEnabled(bool enabled);
+
 private:
     VtkContainer(const int& width, const int& height, const bool& online, const bool& blocking);
 
