@@ -78,9 +78,9 @@ VtkContainer::~VtkContainer()
 {}
 
 
-void VtkContainer::add_content(const std::string& key, std::unique_ptr<VtkContent> content)
+void VtkContainer::add_content(const std::string& key, std::shared_ptr<VtkContent> content)
 {
-    contents_.emplace(key, std::move(content));
+    contents_.emplace(key, content);
 }
 
 void VtkContainer::initialize()
@@ -115,10 +115,19 @@ void VtkContainer::run()
 
 void VtkContainer::update()
 {
+    updateContent();
+    render();
+}
+
+void VtkContainer::updateContent()
+{
     /* Update each content .*/
     for (auto& content : contents_)
         content.second->update(blocking_);
+}
 
+void VtkContainer::render()
+{
     /* Trigger the renderer. */
     render_window_->Render();
 }
@@ -131,6 +140,11 @@ vtkSmartPointer<vtkRenderer> VtkContainer::renderer()
 vtkSmartPointer<vtkRenderWindow> VtkContainer::render_window()
 {
     return render_window_;
+}
+
+vtkSmartPointer<vtkCamera> VtkContainer::camera()
+{
+    return vtk_camera_;
 }
 
 void VtkContainer::setOrientationWidgetEnabled(bool enabled)
