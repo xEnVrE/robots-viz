@@ -60,7 +60,7 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name) :
         {
             palm_thumb0 = Tr(Vector3d(0.039, -0.012, 0.0025));
             palm_thumb0.rotate(R(4.76364 * M_PI / 180.0, Vector3d::UnitY()) * R(29.04 * M_PI / 180.0, Vector3d::UnitZ()));
-            palm_thumb0.rotate(R(-M_PI / 2.0, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitZ()));
+            palm_thumb0.rotate(R(-M_PI / 2.0, Vector3d::UnitY()) * R(-M_PI / 2.0, Vector3d::UnitZ()));
         }
 
         /* Virtual root to thumb0. */
@@ -73,16 +73,26 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name) :
 
         /* thumb0 to thumb0_r. */
         T thumb0_r = T::Identity();
-        thumb0_r.rotate(R(M_PI, Vector3d::UnitX()));
+        if (part_name == "left_hand")
+            thumb0_r.rotate(R(M_PI, Vector3d::UnitX()));
+        else
+            thumb0_r.rotate(R(M_PI / 2.0, Vector3d::UnitZ()) * R(M_PI, Vector3d::UnitY()));
         maps_["thumb0"]["thumb0_r"] = thumb0_r;
 
         /* thumb0 to thumb1. */
-        T thumb0_thumb1 = DH(0.0, 0.0, 0.0211, M_PI / 2.0) * DH(-0.0049, 0.0, 0.0, 0.0);
+        T thumb0_thumb1;
+        if (part_name == "left_hand")
+            thumb0_thumb1 = DH(0.0, 0.0, 0.0211, M_PI / 2.0) * DH(-0.0049, 0.0, 0.0, 0.0);
+        else
+            thumb0_thumb1 = DH(0.0, 0.0, 0.0211, -M_PI / 2.0) * DH(0.0049, 0.0, 0.0, 0.0);
         maps_["thumb0"]["thumb1"] = thumb0_thumb1;
 
         /* thumb1 to thumb1_r. */
         T thumb1_thumb1_r = T::Identity();
-        thumb1_thumb1_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        if (part_name == "left_hand")
+            thumb1_thumb1_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        else
+            thumb1_thumb1_r.rotate(R(M_PI, Vector3d::UnitX()));
         maps_["thumb1"]["thumb1_r"] = thumb1_thumb1_r;
 
         /* thumb1 to thumb2. */
@@ -91,7 +101,10 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name) :
 
         /* thumb2 to  thumb2_r. */
         T thumb2_thumb2_r = T::Identity();
-        thumb2_thumb2_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        if (part_name == "left_hand")
+            thumb2_thumb2_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
+        else
+            thumb2_thumb2_r.rotate(R(M_PI, Vector3d::UnitX()));
         maps_["thumb2"]["thumb2_r"] = thumb2_thumb2_r;
 
         /* thumb2 to thumb3. */
@@ -100,7 +113,10 @@ iCubForwardKinematics::iCubForwardKinematics(const std::string& part_name) :
 
         /* thumb3 to  thumb3_r. */
         T thumb3_thumb3_r = T::Identity();
-        thumb3_thumb3_r.rotate(R(M_PI, Vector3d::UnitY()));
+        if (part_name == "left_hand")
+            thumb3_thumb3_r.rotate(R(M_PI, Vector3d::UnitY()));
+        else
+            thumb3_thumb3_r.rotate(R(M_PI, Vector3d::UnitY()) * R(M_PI, Vector3d::UnitX()));
         maps_["thumb3"]["thumb3_r"] = thumb3_thumb3_r;
 
     /* ***************************** */
