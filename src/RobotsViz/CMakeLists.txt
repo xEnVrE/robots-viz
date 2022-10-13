@@ -135,7 +135,7 @@ cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_RCShader
                           meshes/full_LeftLittle1.obj
                           meshes/full_LeftLittle2.obj
                           meshes/full_LeftLittle3.obj
-                          # meshes/full_RightTopCover.obj
+                          meshes/full_RightTopCover.obj
                           meshes/full_RightHandPalm.obj
                           meshes/full_RightThumb0.obj
                           meshes/full_RightThumb1.obj
