@@ -91,9 +91,7 @@ VtkiCubHand::VtkiCubHand(const std::string& robot_name, const std::string& later
         );
     }
 
-    pose_.resize(7);
-    pose_.zero();
-    pose_[3] = 1.0;
+    transform_.setIdentity();
 }
 
 
@@ -106,7 +104,7 @@ VtkiCubHand::~VtkiCubHand()
 void VtkiCubHand::add_to_renderer(vtkRenderer& renderer)
 {
     /* Add all the parts to the renderer. */
-    for (auto mesh : meshes_)
+    for (auto& mesh : meshes_)
         mesh.second.add_to_renderer(renderer);
 }
 
@@ -116,7 +114,13 @@ bool VtkiCubHand::update(const bool& blocking)
     yarp::sig::Vector* pose_in = hand_pose_port_in_.read(blocking);
 
     if (pose_in != nullptr)
-        pose_ = *pose_in;
+    {
+        VectorXd pose = toEigen(*pose_in);
+        Transform<double, 3, Affine> transform;
+        transform = Translation<double, 3>(pose.head<3>());
+        transform.rotate(AngleAxisd(pose(6), pose.segment<3>(3)));
+        transform_ = transform;
+    }
 
     std::unordered_map<std::string, VectorXd> encoders;
     if (use_fingers_)
@@ -128,17 +132,17 @@ bool VtkiCubHand::update(const bool& blocking)
             return false;
     }
 
-    VectorXd pose = toEigen(pose_);
-    Transform<double, 3, Affine> transform;
-    transform = Translation<double, 3>(pose.head<3>());
-    transform.rotate(AngleAxisd(pose(6), pose.segment<3>(3)));
-
     /* Palm. */
     for (auto& mesh : meshes_)
         if (use_fingers_)
-            mesh.second.set_pose(transform * forward_kinematics_->map("ee", mesh.first, encoders));
+            mesh.second.set_pose(transform_ * forward_kinematics_->map("ee", mesh.first, encoders));
         else
-            mesh.second.set_pose(transform * forward_kinematics_->map("ee", mesh.first));
+            mesh.second.set_pose(transform_ * forward_kinematics_->map("ee", mesh.first));
 
     return true;
+}
+
+void RobotsViz::VtkiCubHand::setTransform(const Eigen::Matrix4d &transform)
+{
+    transform_ = transform;
 }

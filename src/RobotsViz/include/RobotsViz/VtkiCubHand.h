@@ -41,6 +41,8 @@ public:
 
     bool update(const bool& blocking) override;
 
+    void setTransform(const Eigen::Matrix4d &transform);
+
 private:
     yarp::os::Network yarp_;
 
@@ -56,7 +58,7 @@ private:
 
     const std::string log_name_ = "VtkiCubHand";
 
-    yarp::sig::Vector pose_;
+    Eigen::Transform<double, 3, Eigen::Affine> transform_;
 };
 
 #endif /* ROBOTSVIZ_VTKICUBHAND_H */
