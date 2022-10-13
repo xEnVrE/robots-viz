@@ -46,9 +46,12 @@ VtkiCubHand::VtkiCubHand(const std::string& robot_name, const std::string& later
     meshes_.emplace("top_cover", VtkMeshOBJ(MeshResources("full_" +  laterality_key + "TopCover.obj"), color, opacity));
 
     meshes_.emplace("thumb0", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb0.obj"), color, opacity));
-    meshes_.emplace("thumb1", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb1.obj"), color, opacity));
-    meshes_.emplace("thumb2", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb2.obj"), color, opacity));
-    meshes_.emplace("thumb3", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb3.obj"), color, opacity));
+    if (laterality == "left")
+    {
+        meshes_.emplace("thumb1", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb1.obj"), color, opacity));
+        meshes_.emplace("thumb2", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb2.obj"), color, opacity));
+        meshes_.emplace("thumb3", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb3.obj"), color, opacity));
+    }
 
     meshes_.emplace("index0", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Index0.obj"), color, opacity));
     meshes_.emplace("index1", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Index1.obj"), color, opacity));
