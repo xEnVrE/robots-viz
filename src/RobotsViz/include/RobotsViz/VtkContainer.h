@@ -20,6 +20,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkSmartPointer.h>
+#include <memory>
 
 namespace RobotsViz {
     class VtkContainer;
@@ -34,16 +35,30 @@ public:
 
     virtual ~VtkContainer();
 
-    void add_content(const std::string& key, std::unique_ptr<VtkContent> content);
+    void add_content(const std::string& key, std::shared_ptr<VtkContent> content);
+
+    void initialize();
 
     void run();
 
-    void update();
+    void update(); //updateContent() + render()
+
+    void updateContent();
+
+    void render();
+
+    vtkSmartPointer<vtkRenderer> renderer();
+
+    vtkSmartPointer<vtkRenderWindow> render_window();
+
+    vtkSmartPointer<vtkCamera> camera();
+
+    void setOrientationWidgetEnabled(bool enabled);
 
 private:
     VtkContainer(const int& width, const int& height, const bool& online, const bool& blocking);
 
-    std::unordered_map<std::string, std::unique_ptr<VtkContent>> contents_;
+    std::unordered_map<std::string, std::shared_ptr<VtkContent>> contents_;
 
     vtkSmartPointer<vtkAxesActor> axes_;
 

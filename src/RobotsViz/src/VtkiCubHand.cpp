@@ -43,18 +43,12 @@ VtkiCubHand::VtkiCubHand(const std::string& robot_name, const std::string& later
 
     /* Add meshes of hand parts. */
     meshes_.emplace("palm", VtkMeshOBJ(MeshResources("full_" +  laterality_key + "HandPalm.obj"), color, opacity));
+    meshes_.emplace("top_cover", VtkMeshOBJ(MeshResources("full_" +  laterality_key + "TopCover.obj"), color, opacity));
 
-    if (laterality == "left")
-    {
-        meshes_.emplace("top_cover", VtkMeshOBJ(MeshResources("full_" +  laterality_key + "TopCover.obj"), color, opacity));
-
-        meshes_.emplace("thumb0", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb0.obj"), color, opacity));
-        meshes_.emplace("thumb1", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb1.obj"), color, opacity));
-        meshes_.emplace("thumb2", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb2.obj"), color, opacity));
-        meshes_.emplace("thumb3", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb3.obj"), color, opacity));
-    }
-    /* else
-       TODO */
+    meshes_.emplace("thumb0", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb0.obj"), color, opacity));
+    meshes_.emplace("thumb1", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb1.obj"), color, opacity));
+    meshes_.emplace("thumb2", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb2.obj"), color, opacity));
+    meshes_.emplace("thumb3", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Thumb3.obj"), color, opacity));
 
     meshes_.emplace("index0", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Index0.obj"), color, opacity));
     meshes_.emplace("index1", VtkMeshOBJ(MeshResources("full_" + laterality_key + "Index1.obj"), color, opacity));
@@ -90,6 +84,8 @@ VtkiCubHand::VtkiCubHand(const std::string& robot_name, const std::string& later
             new iCubHand(robot_name, laterality, port_prefix + "/vtk-icub-hand", "icub-fingers-encoders", use_analogs)
         );
     }
+
+    transform_.setIdentity();
 }
 
 
@@ -102,7 +98,7 @@ VtkiCubHand::~VtkiCubHand()
 void VtkiCubHand::add_to_renderer(vtkRenderer& renderer)
 {
     /* Add all the parts to the renderer. */
-    for (auto mesh : meshes_)
+    for (auto& mesh : meshes_)
         mesh.second.add_to_renderer(renderer);
 }
 
@@ -111,8 +107,14 @@ bool VtkiCubHand::update(const bool& blocking)
 {
     yarp::sig::Vector* pose_in = hand_pose_port_in_.read(blocking);
 
-    if (pose_in == nullptr)
-        return false;
+    if (pose_in != nullptr)
+    {
+        VectorXd pose = toEigen(*pose_in);
+        Transform<double, 3, Affine> transform;
+        transform = Translation<double, 3>(pose.head<3>());
+        transform.rotate(AngleAxisd(pose(6), pose.segment<3>(3)));
+        transform_ = transform;
+    }
 
     std::unordered_map<std::string, VectorXd> encoders;
     if (use_fingers_)
@@ -124,17 +126,17 @@ bool VtkiCubHand::update(const bool& blocking)
             return false;
     }
 
-    VectorXd pose = toEigen(*pose_in);
-    Transform<double, 3, Affine> transform;
-    transform = Translation<double, 3>(pose.head<3>());
-    transform.rotate(AngleAxisd(pose(6), pose.segment<3>(3)));
-
     /* Palm. */
-    for (auto mesh : meshes_)
+    for (auto& mesh : meshes_)
         if (use_fingers_)
-            mesh.second.set_pose(transform * forward_kinematics_->map("ee", mesh.first, encoders));
+            mesh.second.set_pose(transform_ * forward_kinematics_->map("ee", mesh.first, encoders));
         else
-            mesh.second.set_pose(transform * forward_kinematics_->map("ee", mesh.first));
+            mesh.second.set_pose(transform_ * forward_kinematics_->map("ee", mesh.first));
 
     return true;
+}
+
+void RobotsViz::VtkiCubHand::setTransform(const Eigen::Matrix4d &transform)
+{
+    transform_ = transform;
 }

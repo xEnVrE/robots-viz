@@ -143,9 +143,13 @@ int vtkOBJResource::RequestData(
   }
 
   if (use_file_)
+  {
       vtkDebugMacro(<<"Reading file");
+  }
   else
+  {
       vtkDebugMacro(<<"Reading data");
+  }
 
   // initialize some structures to store the file contents in
   vtkPoints *points = vtkPoints::New();

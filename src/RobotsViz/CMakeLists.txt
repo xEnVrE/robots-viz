@@ -135,7 +135,7 @@ cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_RCShader
                           meshes/full_LeftLittle1.obj
                           meshes/full_LeftLittle2.obj
                           meshes/full_LeftLittle3.obj
-                          # meshes/full_RightTopCover.obj
+                          meshes/full_RightTopCover.obj
                           meshes/full_RightHandPalm.obj
                           meshes/full_RightThumb0.obj
                           meshes/full_RightThumb1.obj
@@ -166,6 +166,9 @@ target_include_directories(${LIBRARY_TARGET_NAME}
                            PUBLIC
                            "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
                            "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
+
+target_include_directories(${LIBRARY_TARGET_NAME}
+    PUBLIC ${VTK_INCLUDE_DIRS})
 
 target_link_libraries(${LIBRARY_TARGET_NAME}
                       PRIVATE
