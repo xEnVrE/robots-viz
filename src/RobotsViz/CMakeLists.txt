@@ -18,7 +18,9 @@ find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 
 # RobotsIO
-find_package(RobotsIO REQUIRED)
+if (NOT TARGET RobotsIO::RobotsIO)
+  find_package(RobotsIO REQUIRED)
+endif()
 
 # VTK
 find_package(VTK REQUIRED)
@@ -161,6 +163,7 @@ cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_RCShader
 
 # Create library
 add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TARGET_NAME}_HDR})
+add_library(${PROJECT_NAME}::${LIBRARY_TARGET_NAME} ALIAS ${LIBRARY_TARGET_NAME})
 
 target_include_directories(${LIBRARY_TARGET_NAME}
                            PUBLIC
