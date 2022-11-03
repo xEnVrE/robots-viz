@@ -61,7 +61,6 @@ endif()
 # options for YARP and SuperimposeMesh
 option(USE_SUPERIMPOSE "Use SuperimposeMesh" OFF)
 option(USE_YARP        "Use YARP"            OFF)
-option(USE_OTL         "Use ObjectTrackingLibrary" OFF)
 option(BUILD_VIEWER    "Build basic 3D viewer" OFF)
 
 # Library sources
@@ -75,9 +74,6 @@ if (USE_YARP)
 endif()
 if (USE_SUPERIMPOSE)
   set(DEPENDENCIES ${DEPENDENCIES} "SuperimposeMesh")
-endif()
-if (USE_OTL)
-  set(DEPENDENCIES ${DEPENDENCIES} "OTL")
 endif()
 
 include(InstallBasicPackageFiles)

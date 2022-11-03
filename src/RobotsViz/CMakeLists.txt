@@ -41,11 +41,6 @@ if (USE_YARP)
     )
 endif()
 
-if (USE_OTL)
-  # ObjectTrackingLibrary
-  find_package(OTL REQUIRED)
-endif()
-
 # Header files
 list(APPEND ${LIBRARY_TARGET_NAME}_HDR
     include/RobotsViz/MeshResources.h
@@ -95,16 +90,6 @@ if (USE_SUPERIMPOSE AND USE_YARP)
 
     list(APPEND ${LIBRARY_TARGET_NAME}_SRC
          src/SIiCubHand.cpp
-    )
-endif()
-
-if (USE_OTL)
-    list(APPEND ${LIBRARY_TARGET_NAME}_HDR
-         include/RobotsViz/MeshResourcesOTL.h
-    )
-
-    list(APPEND ${LIBRARY_TARGET_NAME}_SRC
-         src/MeshResourcesOTL.cpp
     )
 endif()
 
@@ -198,15 +183,6 @@ if (USE_YARP)
                           )
 endif()
 
-if (USE_OTL)
-  target_link_libraries(${LIBRARY_TARGET_NAME} PUBLIC
-                        OTL::OTL
-                        )
-endif()
-
-if (USE_OTL)
-    target_compile_definitions(${LIBRARY_TARGET_NAME} PUBLIC ROBOTSVIZ_USES_OTL)
-endif()
 set_target_properties(${LIBRARY_TARGET_NAME}
                       PROPERTIES
                       VERSION ${${PROJECT_NAME}_VERSION}
