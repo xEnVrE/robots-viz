@@ -44,6 +44,7 @@ endif()
 # Header files
 list(APPEND ${LIBRARY_TARGET_NAME}_HDR
     include/RobotsViz/MeshResources.h
+    include/RobotsViz/PointCloudCamera.h
     include/RobotsViz/PointCloudSource.h
     include/RobotsViz/Resources.h
     include/RobotsViz/VtkContainer.h
@@ -62,6 +63,7 @@ list(APPEND ${LIBRARY_TARGET_NAME}_HDR
 # Source files
 list(APPEND ${LIBRARY_TARGET_NAME}_SRC
     src/MeshResources.cpp
+    src/PointCloudCamera.cpp
     src/VtkContainer.cpp
     src/VtkContent.cpp
     src/VtkManualUpdateHandler.cpp
