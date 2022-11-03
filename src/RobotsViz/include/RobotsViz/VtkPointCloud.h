@@ -10,9 +10,7 @@
 
 #include <Eigen/Dense>
 
-#include <RobotsIO/Camera/Camera.h>
-#include <RobotsIO/Camera/CameraParameters.h>
-
+#include <RobotsViz/PointCloudSource.h>
 #include <RobotsViz/VtkContent.h>
 
 #include <vtkActor.h>
@@ -32,7 +30,7 @@ namespace RobotsViz {
 class RobotsViz::VtkPointCloud : public RobotsViz::VtkContent
 {
 public:
-    VtkPointCloud(std::unique_ptr<RobotsIO::Camera::Camera> camera, const double& far_plane_ = std::numeric_limits<double>::infinity(), const double& subsampling_radius = -1);
+    VtkPointCloud(std::unique_ptr<RobotsViz::PointCloudSource> source);
 
     virtual ~VtkPointCloud();
 
@@ -43,7 +41,7 @@ public:
 private:
     void set_points(const Eigen::Ref<const Eigen::MatrixXd>& points);
 
-    void set_colors(const Eigen::Ref<const Eigen::VectorXi>& valid_coordinates, const cv::Mat& rgb_image);
+    void set_colors(const Eigen::Ref<const Eigen::Matrix<unsigned char, Eigen::Dynamic, Eigen::Dynamic>>& colors);
 
     vtkSmartPointer<vtkActor> actor_;
 
@@ -57,13 +55,7 @@ private:
 
     vtkSmartPointer<vtkUnsignedCharArray> colors_;
 
-    std::unique_ptr<RobotsIO::Camera::Camera> camera_;
-
-    RobotsIO::Camera::CameraParameters camera_parameters_;
-
-    std::vector<cv::Point> image_coordinates_;
-
-    const double far_plane_;
+    std::unique_ptr<RobotsViz::PointCloudSource> source_;
 
     const std::string log_name_ = "VtkPointCloud";
 };
