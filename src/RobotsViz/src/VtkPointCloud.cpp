@@ -35,6 +35,9 @@ VtkPointCloud::VtkPointCloud(std::unique_ptr<PointCloudSource> source) :
     actor_ = vtkSmartPointer<vtkActor>::New();
     actor_->SetMapper(mapper_);
     actor_->GetProperty()->SetPointSize(2);
+
+    frame_ = std::unique_ptr<VtkReferenceFrame>(new VtkReferenceFrame(1.0));
+
 }
 
 
@@ -45,6 +48,8 @@ VtkPointCloud::~VtkPointCloud()
 void VtkPointCloud::add_to_renderer(vtkRenderer& renderer)
 {
     renderer.AddActor(actor_);
+    frame_->add_to_renderer(renderer);
+    frame_->set_visibility(false);
 }
 
 
@@ -59,6 +64,16 @@ bool VtkPointCloud::update(const bool& blocking)
     /* Set new points and colors. */
     set_points(points);
     set_colors(colors);
+
+    /* Set new pose. */
+    bool valid_pose;
+    Transform<double, 3, Affine> pose;
+    std::tie(valid_pose, pose) = source_->pose();
+    if (valid_pose)
+    {
+        frame_->set_transform(pose);
+        frame_->update(blocking);
+    }
 
     return true;
 }
@@ -90,4 +105,10 @@ void VtkPointCloud::set_colors(const Ref<const Matrix<unsigned char, Dynamic, Dy
     }
 
     polydata_->GetPointData()->SetScalars(colors_);
+}
+
+
+VtkReferenceFrame& VtkPointCloud::get_reference_frame()
+{
+    return *frame_;
 }

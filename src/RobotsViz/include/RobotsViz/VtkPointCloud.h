@@ -12,6 +12,7 @@
 
 #include <RobotsViz/PointCloudSource.h>
 #include <RobotsViz/VtkContent.h>
+#include <RobotsViz/VtkReferenceFrame.h>
 
 #include <vtkActor.h>
 #include <vtkPointData.h>
@@ -38,6 +39,8 @@ public:
 
     bool update(const bool& blocking) override;
 
+    VtkReferenceFrame& get_reference_frame();
+
 private:
     void set_points(const Eigen::Ref<const Eigen::MatrixXd>& points);
 
@@ -56,6 +59,8 @@ private:
     vtkSmartPointer<vtkUnsignedCharArray> colors_;
 
     std::unique_ptr<RobotsViz::PointCloudSource> source_;
+
+    std::unique_ptr<RobotsViz::VtkReferenceFrame> frame_;
 
     const std::string log_name_ = "VtkPointCloud";
 };
