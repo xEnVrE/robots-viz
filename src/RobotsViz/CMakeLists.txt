@@ -64,6 +64,7 @@ list(APPEND ${LIBRARY_TARGET_NAME}_HDR
 list(APPEND ${LIBRARY_TARGET_NAME}_SRC
     src/MeshResources.cpp
     src/PointCloudCamera.cpp
+    src/PointCloudSource.cpp
     src/VtkContainer.cpp
     src/VtkContent.cpp
     src/VtkManualUpdateHandler.cpp

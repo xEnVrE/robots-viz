@@ -20,7 +20,11 @@ namespace RobotsViz {
 class RobotsViz::PointCloudSource
 {
 public:
-    virtual std::tuple<bool, Eigen::MatrixXd/* points */, Eigen::Matrix<unsigned char, Eigen::Dynamic, Eigen::Dynamic> /* colors */> points(const bool& blocking) = 0;
+    virtual bool freeze(const bool& blocking);
+
+    virtual Eigen::MatrixXd points() = 0;
+
+    virtual Eigen::Matrix<unsigned char, Eigen::Dynamic, Eigen::Dynamic> colors() = 0;
 };
 
 #endif /* ROBOTSVIZ_POINTCLOUDSOURCE_H */
