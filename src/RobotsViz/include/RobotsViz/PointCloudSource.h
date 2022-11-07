@@ -25,6 +25,8 @@ public:
     virtual Eigen::MatrixXd points() = 0;
 
     virtual Eigen::Matrix<unsigned char, Eigen::Dynamic, Eigen::Dynamic> colors() = 0;
+
+    virtual std::tuple<bool, Eigen::Transform<double, 3, Eigen::Affine>> pose();
 };
 
 #endif /* ROBOTSVIZ_POINTCLOUDSOURCE_H */
