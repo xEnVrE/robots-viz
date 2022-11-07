@@ -7,6 +7,8 @@
 
 #include <RobotsViz/PointCloudSource.h>
 
+using namespace RobotsViz;
+
 
 bool PointCloudSource::freeze(const bool& blocking)
 {
