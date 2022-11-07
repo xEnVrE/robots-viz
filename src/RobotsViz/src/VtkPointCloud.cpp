@@ -50,16 +50,13 @@ void VtkPointCloud::add_to_renderer(vtkRenderer& renderer)
 
 bool VtkPointCloud::update(const bool& blocking)
 {
-    /* Set new points and colors. */
-    MatrixXd points;
-    Matrix<unsigned char, Dynamic, Dynamic> colors;
-    bool valid;
-
-    std::tie(valid, points, colors) = source_->points(blocking);
-
-    if (!valid)
+    if (!source_->freeze(blocking))
         return false;
 
+    MatrixXd points = source_->points();
+    Matrix<unsigned char, Dynamic, Dynamic> colors = source_->colors();
+
+    /* Set new points and colors. */
     set_points(points);
     set_colors(colors);
 
