@@ -42,13 +42,12 @@ PointCloudCamera::PointCloudCamera(std::unique_ptr<Camera> camera, const double&
 }
 
 
-std::tuple<bool, MatrixXd, Matrix<unsigned char, Dynamic, Dynamic>> PointCloudCamera::points(const bool& blocking)
-{
-    auto false_tuple = std::make_tuple(false, Eigen::MatrixXd(), Eigen::Matrix<unsigned char, Dynamic, Dynamic>());
 
+bool PointCloudCamera::freeze(const bool& blocking)
+{
     /* Step frame in case of an offline camera. */
     if (!camera_->step_frame())
-        return false_tuple;
+        return false;
 
     bool valid_data = false;
 
@@ -56,21 +55,21 @@ std::tuple<bool, MatrixXd, Matrix<unsigned char, Dynamic, Dynamic>> PointCloudCa
     cv::Mat rgb;
     std::tie(valid_data, rgb) = camera_->rgb(blocking);
     if (!valid_data)
-        return false_tuple;
+        return false;
 
     /* Get D. */
     valid_data = false;
     MatrixXf depth;
     std::tie(valid_data, depth) = camera_->depth(blocking);
     if (!valid_data)
-        return false_tuple;
+        return false;
 
     /* Get camera pose. */
     valid_data = false;
     Transform<double, 3, Affine> pose;
     std::tie(valid_data, pose) = camera_->pose(blocking);
     if (!valid_data)
-        return false_tuple;
+        return false;
 
     /* Find valid points. */
     VectorXi valid_points(image_coordinates_.size());
@@ -86,18 +85,18 @@ std::tuple<bool, MatrixXd, Matrix<unsigned char, Dynamic, Dynamic>> PointCloudCa
 
     std::size_t num_valids = valid_points.sum();
     if (num_valids == 0)
-        return false_tuple;
+        return false;
 
     /* Get deprojection matrix. */
     valid_data = false;
     MatrixXd deprojection_matrix;
     std::tie(valid_data, deprojection_matrix) = camera_->deprojection_matrix();
     if (!valid_data)
-        return false_tuple;
+        return false;
 
     /* Store only valid 3D points. */
-    MatrixXd points(3, num_valids);
-    Matrix<unsigned char, -1, -1> colors(3, num_valids);
+    points_ = MatrixXd(3, num_valids);
+    colors_ = Matrix<unsigned char, -1, -1>(3, num_valids);
     for (std::size_t i = 0, j = 0; i < image_coordinates_.size(); i++)
     {
         if (valid_points(i) == 1)
@@ -105,18 +104,32 @@ std::tuple<bool, MatrixXd, Matrix<unsigned char, Dynamic, Dynamic>> PointCloudCa
             const int& u = image_coordinates_.at(i).x;
             const int& v = image_coordinates_.at(i).y;
 
-            points.col(j) = deprojection_matrix.col(u * camera_parameters_.height() + v) * depth(v, u);
+            points_.col(j) = deprojection_matrix.col(u * camera_parameters_.height() + v) * depth(v, u);
 
             cv::Vec3b cv_color = rgb.at<cv::Vec3b>(image_coordinates_.at(i));
             Matrix<unsigned char, -1, -1> color(3, 1);
-            colors(0, j) = cv_color[0];
-            colors(1, j) = cv_color[1];
-            colors(2, j) = cv_color[2];
+            colors_(0, j) = cv_color[0];
+            colors_(1, j) = cv_color[1];
+            colors_(2, j) = cv_color[2];
 
             j++;
         }
     }
-    points = pose * points.colwise().homogeneous();
 
-    return std::make_tuple(true, points, colors);
+    points_ = pose * points_.colwise().homogeneous();
+
+    return true;
+}
+
+
+
+MatrixXd PointCloudCamera::points()
+{
+    return points_;
+}
+
+
+Matrix<unsigned char, Dynamic, Dynamic> PointCloudCamera::colors()
+{
+    return colors_;
 }

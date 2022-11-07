@@ -13,6 +13,8 @@
 #include <RobotsIO/Camera/Camera.h>
 #include <RobotsIO/Camera/CameraParameters.h>
 
+#include <Eigen/Dense>
+
 #include <memory>
 
 namespace RobotsViz {
@@ -25,7 +27,11 @@ class RobotsViz::PointCloudCamera : public RobotsViz::PointCloudSource
 public:
     PointCloudCamera(std::unique_ptr<RobotsIO::Camera::Camera> camera, const double& far_plane_ = std::numeric_limits<double>::infinity(), const double& subsampling_radius = -1);
 
-    std::tuple<bool, Eigen::MatrixXd, Eigen::Matrix<unsigned char, Eigen::Dynamic, Eigen::Dynamic>> points(const bool& blocking) override;
+    bool freeze(const bool& blocking) override;
+
+    Eigen::MatrixXd points() override;
+
+    Eigen::Matrix<unsigned char, Eigen::Dynamic, Eigen::Dynamic> colors() override;
 
 private:
     std::unique_ptr<RobotsIO::Camera::Camera> camera_;
@@ -33,6 +39,10 @@ private:
     RobotsIO::Camera::CameraParameters camera_parameters_;
 
     std::vector<cv::Point> image_coordinates_;
+
+    Eigen::MatrixXd points_;
+
+    Eigen::Matrix<unsigned char, Eigen::Dynamic, Eigen::Dynamic> colors_;
 
     const double far_plane_;
 };
