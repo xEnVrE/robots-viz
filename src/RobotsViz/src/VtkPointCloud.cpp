@@ -37,7 +37,7 @@ VtkPointCloud::VtkPointCloud(std::unique_ptr<PointCloudSource> source) :
     actor_->GetProperty()->SetPointSize(2);
 
     frame_ = std::unique_ptr<VtkReferenceFrame>(new VtkReferenceFrame(1.0));
-
+    frame_->set_visibility(false);
 }
 
 
@@ -49,7 +49,6 @@ void VtkPointCloud::add_to_renderer(vtkRenderer& renderer)
 {
     renderer.AddActor(actor_);
     frame_->add_to_renderer(renderer);
-    frame_->set_visibility(false);
 }
 
 
