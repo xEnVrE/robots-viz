@@ -90,6 +90,12 @@ void VtkContainer::set_position(const std::size_t& x, const std::size_t& y)
 }
 
 
+void VtkContainer::set_title(const std::string& title)
+{
+    render_window_->SetWindowName(title.c_str());
+}
+
+
 void VtkContainer::initialize()
 {
     /* Add contents to the renderer. */

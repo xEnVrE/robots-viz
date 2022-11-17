@@ -39,6 +39,8 @@ public:
 
     void set_position(const std::size_t& x, const std::size_t& y);
 
+    void set_title(const std::string& title);
+
     void initialize();
 
     void run();
