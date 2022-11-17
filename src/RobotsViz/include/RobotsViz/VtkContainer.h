@@ -37,6 +37,8 @@ public:
 
     void add_content(const std::string& key, std::shared_ptr<VtkContent> content);
 
+    void set_position(const std::size_t& x, const std::size_t& y);
+
     void initialize();
 
     void run();

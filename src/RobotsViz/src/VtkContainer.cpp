@@ -83,6 +83,13 @@ void VtkContainer::add_content(const std::string& key, std::shared_ptr<VtkConten
     contents_.emplace(key, content);
 }
 
+
+void VtkContainer::set_position(const std::size_t& x, const std::size_t& y)
+{
+    render_window_->SetPosition(x, y);
+}
+
+
 void VtkContainer::initialize()
 {
     /* Add contents to the renderer. */
